@@ -7,6 +7,25 @@ pub struct Sphere {
     pub radius : f32
 }
 
+impl Sphere {
+    pub fn new(x:f32,y:f32) -> Sphere {
+        Sphere {
+            center: Vector3::new(
+                x,
+                y,
+                -5.0,
+            ),
+            radius: 1.0,
+            color: Color {
+                r: 0,
+                g: 125,
+                b: 225,
+                a: 0
+            },
+        }
+    }
+}
+
 impl Intersectable for Sphere{
     fn intersect(&self, ray : &Ray) -> bool{
         //Calculate the vector between ray and sphere
