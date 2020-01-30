@@ -16,7 +16,7 @@ impl Scene {
             width : 600,
             height : 400,
             fov : 90.0,
-            spheres : vec!(Sphere::new(0f32,0f32),Sphere::new(1f32,1f32))
+            spheres : vec!(Sphere::new(0f32,0f32,-5f32),Sphere::new(1f32,1f32,-6f32))
         }
     }
     pub fn fire_rays(&self, image : &mut DynamicImage) -> DynamicImage {

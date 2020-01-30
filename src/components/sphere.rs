@@ -8,12 +8,12 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(x:f32,y:f32) -> Sphere {
+    pub fn new(x:f32,y:f32,z:f32) -> Sphere {
         Sphere {
             center: Vector3::new(
                 x,
                 y,
-                -5.0,
+                z,
             ),
             radius: 1.0,
             color: Color {
