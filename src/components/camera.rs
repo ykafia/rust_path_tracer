@@ -13,3 +13,6 @@ pub struct Camera {
     pub sphere : Sphere
 }
 
+impl Camera {
+}
+
