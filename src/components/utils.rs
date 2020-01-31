@@ -1,12 +1,16 @@
 use super::*;
 use image::{Pixel,Rgba};
 
+
+#[derive(Clone)]
 pub struct Color{
     pub r : u8,
     pub g : u8,
     pub b : u8,
     pub a : u8
 }
+
+
 impl Color {
     pub fn new(red : u8, green : u8, blue : u8, alpha : u8) -> Color{
         Color {
@@ -25,5 +29,5 @@ impl Color {
 
 
 pub trait Intersectable {
-    fn intersect(&self, ray: &Ray) -> bool;
+    fn intersect(&self, ray: &Ray) -> Option<f32>;
 }
