@@ -30,4 +30,5 @@ impl Color {
 
 pub trait Intersectable {
     fn intersect(&self, ray: &Ray) -> Option<f32>;
+    fn get_color(&self) -> Color;
 }

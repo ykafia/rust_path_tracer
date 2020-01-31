@@ -3,7 +3,7 @@ use super::*;
 
 
 
-
+#[derive(Clone)]
 pub struct Camera {
     pub position : Vector3<f32>,
     pub rotation : Rotation3<f32>,

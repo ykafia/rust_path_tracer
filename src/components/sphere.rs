@@ -66,4 +66,7 @@ impl Intersectable for Sphere {
         let distance = if t0 < t1 { t0 } else { t1 };
         Some(distance)
     }
+    fn get_color(&self) -> Color {
+        self.color.clone()
+    }
 }

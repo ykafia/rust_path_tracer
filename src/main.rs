@@ -21,6 +21,11 @@ fn main() {
 
 fn render_scene(scene : &Scene) -> DynamicImage {
     let mut image = DynamicImage::new_rgb8(scene.width, scene.height);
+    for x in 0..scene.width{
+        for y in 0..scene.height {
+            image.put_pixel(x, y, Color::new(0u8,0u8,255u8,255).to_rgba());
+        }
+    }
     image = scene.fire_rays(&mut image);
     image
 }
