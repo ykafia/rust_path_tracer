@@ -5,6 +5,7 @@ pub struct Plane {
     pub position: Vector3<f32>,
     pub normal: Vector3<f32>,
     pub color: Color,
+    pub albedo : f32,
 }
 
 impl Plane {
@@ -13,6 +14,7 @@ impl Plane {
             position: Vector3::new(0f32, -0.5f32, 0f32),
             normal: Vector3::new(0f32, -1f32, 0f32),
             color: Colors::GREY.value(),
+            albedo : 1f32
         }
     }
 }
@@ -40,5 +42,8 @@ impl Intersectable for Plane {
     }
     fn get_position(&self) -> Vector3<f32> {
         self.position
+    }
+    fn get_albedo(&self) -> f32 {
+        self.albedo
     }
 }

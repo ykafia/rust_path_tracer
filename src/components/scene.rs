@@ -23,15 +23,15 @@ impl Scene {
                 Vector3::new(0f32, 0f32, 0f32).normalize()
             ),
             elements: vec![
-                Box::new(Sphere::new_red(0f32, 0f32, -3f32)),
-                Box::new(Sphere::new_blue(0f32, 1f32, -2f32)),
-                Box::new(Sphere::new_red(1f32, 1f32, -3f32)),
+                Box::new(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1f32)),
+                Box::new(Sphere::new(0f32, 1f32, -4f32,Colors::RED,1.0)),
+                Box::new(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,0.8)),
                 Box::new(Plane::new()),
             ],
             directional_light : DirectionalLight {
                 direction : Vector3::new(0f32,-1f32,-1f32),
-                color : Colors::WHITE,
-                intensity : 0.8
+                color : Colors::WHITE.value(),
+                intensity : 0.5
             }
             
         };
@@ -46,12 +46,15 @@ impl Scene {
             for y in 0..self.height {
                 for element in &self.elements {
                     let ray = Ray::from_camera(x, y, self);
-                    //TODO : recheck the distance thingy
                     match element.intersect(&ray) {
                         Some(d) => {
                             if d.distance < temp.1 {
+                                let intensity = (d.normal.dot(&self.directional_light.direction)) * &self.directional_light.intensity;
+                                let reflected = element.get_albedo(); // /std::f32::consts::PI;
+                                //println!("intensity {} reflected {}",intensity,reflected);
                                 temp.1 = d.distance;
-                                temp.0 = element.get_color();
+                                
+                                temp.0 = element.get_color() * intensity * reflected ;//* self.directional_light.color.clone();
                             }
                         }
                         None => (),

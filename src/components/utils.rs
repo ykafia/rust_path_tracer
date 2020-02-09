@@ -1,5 +1,6 @@
 use super::*;
 use image::{Pixel, Rgba};
+use std::ops::Mul;
 
 #[derive(Clone)]
 pub struct Color {
@@ -35,6 +36,7 @@ pub trait Intersectable {
     fn intersect(&self, ray: &Ray) -> Option<PointInfo>;
     fn get_color(&self) -> Color;
     fn get_position(&self) -> Vector3<f32>;
+    fn get_albedo(&self) -> f32;
 }
 
 pub enum Colors {
@@ -62,6 +64,29 @@ impl Colors {
             Colors::GREY => Color::new(155, 155, 155, 255),
             Colors::SKYBLUE => Color::new(135,206,235,255),
             _ => Color::new(0, 0, 0, 255),
+        }
+    }
+}
+
+impl Mul<f32> for Color {
+    type Output = Color;
+    fn mul(self, value : f32) -> Color {
+        Color {
+            r : ((self.r as f32) * value) as u8,
+            g : ((self.g as f32) * value) as u8,
+            b : ((self.b as f32) * value) as u8,
+            a : ((self.a as f32) * value) as u8,
+        }
+    }
+}
+impl Mul<Color> for Color {
+    type Output = Color;
+    fn mul(self, value : Color) -> Color {
+        Color {
+            r : self.r.checked_mul(value.r).unwrap_or(255),
+            g : self.g.checked_mul(value.g).unwrap_or(255),
+            b : self.b.checked_mul(value.b).unwrap_or(255),
+            a : self.a.checked_mul(value.r).unwrap_or(255),
         }
     }
 }

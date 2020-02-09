@@ -5,45 +5,19 @@ pub struct Sphere {
     pub center: Vector3<f32>,
     pub color: Color,
     pub radius: f32,
+    pub albedo : f32,
 }
 
 impl Sphere {
-    pub fn new(x: f32, y: f32, z: f32) -> Sphere {
+    pub fn new(x: f32, y: f32, z: f32, color : Colors,albedo : f32) -> Sphere {
         Sphere {
             center: Vector3::new(x, y, z),
             radius: 1.0,
-            color: Color {
-                r: 0,
-                g: 125,
-                b: 225,
-                a: 0,
-            },
+            color: color.value(),
+            albedo : albedo
         }
     }
-    pub fn new_blue(x: f32, y: f32, z: f32) -> Sphere {
-        Sphere {
-            center: Vector3::new(x, y, z),
-            radius: 1.0,
-            color: Color {
-                r: 0,
-                g: 125,
-                b: 225,
-                a: 0,
-            },
-        }
-    }
-    pub fn new_red(x: f32, y: f32, z: f32) -> Sphere {
-        Sphere {
-            center: Vector3::new(x, y, z),
-            radius: 1.0,
-            color: Color {
-                r: 225,
-                g: 120,
-                b: 120,
-                a: 0,
-            },
-        }
-    }
+    
 }
 
 impl Intersectable for Sphere {
@@ -68,7 +42,7 @@ impl Intersectable for Sphere {
         Some(
             PointInfo{
                 distance : distance,
-                normal : normal
+                normal : normal.normalize()
             }
         )
     }
@@ -77,5 +51,8 @@ impl Intersectable for Sphere {
     }
     fn get_position(&self) -> Vector3<f32> {
         self.center
+    }
+    fn get_albedo(&self) -> f32{
+        self.albedo
     }
 }
