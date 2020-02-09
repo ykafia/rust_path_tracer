@@ -25,9 +25,16 @@ impl Color {
     }
 }
 
+
+pub struct PointInfo {
+    pub distance : f32,
+    pub normal : Vector3<f32>
+}
+
 pub trait Intersectable {
-    fn intersect(&self, ray: &Ray) -> Option<f32>;
+    fn intersect(&self, ray: &Ray) -> Option<PointInfo>;
     fn get_color(&self) -> Color;
+    fn get_position(&self) -> Vector3<f32>;
 }
 
 pub enum Colors {

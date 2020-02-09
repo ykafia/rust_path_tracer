@@ -18,19 +18,27 @@ impl Plane {
 }
 
 impl Intersectable for Plane {
-    fn intersect(&self, ray: &Ray) -> Option<f32> {
+    fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
         if denom > 1e-6 {
             let v = self.position - ray.origin;
             let distance = v.dot(&normal) / denom;
             if distance >= 0.0 {
-                return Some(distance);
+                return Some(
+                    PointInfo {
+                        distance : distance,
+                        normal : -self.normal
+                    }
+                );
             }
         }
         None
     }
     fn get_color(&self) -> Color {
         self.color.clone()
+    }
+    fn get_position(&self) -> Vector3<f32> {
+        self.position
     }
 }

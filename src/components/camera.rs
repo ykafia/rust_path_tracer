@@ -1,4 +1,4 @@
-use super::na::{Quaternion, Rotation3, Vector3};
+use super::na::{Quaternion, Rotation3, Vector3,Matrix4};
 use super::*;
 
 #[derive(Clone)]
@@ -10,16 +10,21 @@ pub struct Camera {
     pub fov: f32,
 }
 
+
+
+
 impl Camera {
-    pub fn new() -> Camera {
-        let axisangle = Vector3::y() * std::f32::consts::FRAC_PI_2;
+    pub fn new(position : Vector3<f32>, direction : Vector3<f32>) -> Camera {
         Camera {
-            position: Vector3::new(0f32, 0f32, 0f32),
-            rotation: Rotation3::new(axisangle),
+            position: position,
+            rotation: Rotation3::face_towards(&direction,&Vector3::y()),
             width: 600,
             height: 400,
             fov: 70f32,
         }
+    }
+    pub fn change_rotation(&mut self, dir : Vector3<f32>) {
+        self.rotation = Rotation3::face_towards(&dir,&Vector3::y());
     }
     pub fn yaw(&mut self, yaw: f32) {
         self.rotation = Rotation3::from_euler_angles(

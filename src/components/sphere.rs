@@ -47,7 +47,7 @@ impl Sphere {
 }
 
 impl Intersectable for Sphere {
-    fn intersect(&self, ray: &Ray) -> Option<f32> {
+    fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let l = self.center - ray.origin;
         let adj = l.dot(&ray.direction);
         let d2 = l.dot(&l) - (adj * adj);
@@ -64,9 +64,18 @@ impl Intersectable for Sphere {
         }
 
         let distance = if t0 < t1 { t0 } else { t1 };
-        Some(distance)
+        let normal = (distance * &ray.direction) + &ray.origin;
+        Some(
+            PointInfo{
+                distance : distance,
+                normal : normal
+            }
+        )
     }
     fn get_color(&self) -> Color {
         self.color.clone()
+    }
+    fn get_position(&self) -> Vector3<f32> {
+        self.center
     }
 }
