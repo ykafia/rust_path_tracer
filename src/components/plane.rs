@@ -1,21 +1,18 @@
-use super::na::{Vector3,Rotation3};
+use super::na::{Rotation3, Vector3};
 use super::*;
 
-
-
-
 pub struct Plane {
-    pub position : Vector3<f32>,
-    pub normal : Vector3<f32>,
-    pub color : Color
+    pub position: Vector3<f32>,
+    pub normal: Vector3<f32>,
+    pub color: Color,
 }
 
-impl Plane{
+impl Plane {
     pub fn new() -> Plane {
         Plane {
-            position : Vector3::new(0f32,0f32,0f32),
-            normal : Vector3::new(0f32,-1f32,0f32),
-            color : Color::new(100, 100, 100, 100)
+            position: Vector3::new(0f32, -0.5f32, 0f32),
+            normal: Vector3::new(0f32, -1f32, 0f32),
+            color: Colors::GREY.value(),
         }
     }
 }
@@ -37,4 +34,3 @@ impl Intersectable for Plane {
         self.color.clone()
     }
 }
-
