@@ -9,6 +9,7 @@ use std::thread;
 
 fn main() {
     println!("Rendering multiple scenes");   
+    // dotprod();
     render_multiple_scenes(); 
 }
 
@@ -63,11 +64,8 @@ fn render_scene(scene: &Scene) -> DynamicImage {
     image = scene.fire_rays(&mut image);
     image
 }
-#[test]
-fn name() {
-    render_scene(
-        &Scene::new(
-            Vector3::new(0f32,0f32,0f32)
-        )
-    );
+fn dotprod() {
+    let x = Vector3::new(1f32,1f32,0f32);
+    let y = Vector3::new(1f32,0f32,0f32);
+    println!("value is {}",x.dot(&y).acos());
 }

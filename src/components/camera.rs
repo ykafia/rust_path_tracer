@@ -1,5 +1,4 @@
-use super::na::{Quaternion, Rotation3, Vector3,Matrix4};
-use super::*;
+use super::na::{Rotation3, Vector3};
 
 #[derive(Clone)]
 pub struct Camera {

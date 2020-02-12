@@ -1,4 +1,4 @@
-use super::na::{Rotation3, Vector3};
+use super::na::{Vector3};
 use super::*;
 
 pub struct Plane {
@@ -26,6 +26,7 @@ impl Intersectable for Plane {
         if denom > 1e-6 {
             let v = self.position - ray.origin;
             let distance = v.dot(&normal) / denom;
+            let hitpoint = (distance * ray.direction) + ray.origin;
             if distance >= 0.0 {
                 return Some(
                     PointInfo {

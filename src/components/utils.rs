@@ -1,6 +1,6 @@
 use super::*;
 use image::{Pixel, Rgba};
-use std::ops::Mul;
+use std::ops::{Mul,Add,Sub};
 
 #[derive(Clone)]
 pub struct Color {
@@ -61,7 +61,7 @@ impl Colors {
             Colors::MAGENTA => Color::new(255, 0, 255, 255),
             Colors::YELLOW => Color::new(255, 255, 0, 255),
             Colors::WHITE => Color::new(255, 255, 255, 255),
-            Colors::GREY => Color::new(155, 155, 155, 255),
+            Colors::GREY => Color::new(50, 50, 50, 255),
             Colors::SKYBLUE => Color::new(135,206,235,255),
             _ => Color::new(0, 0, 0, 255),
         }
@@ -87,6 +87,28 @@ impl Mul<Color> for Color {
             g : self.g.checked_mul(value.g).unwrap_or(255),
             b : self.b.checked_mul(value.b).unwrap_or(255),
             a : self.a.checked_mul(value.r).unwrap_or(255),
+        }
+    }
+}
+impl Add<Color> for Color {
+    type Output = Color;
+    fn add(self, value : Color) -> Color {
+        Color {
+            r : self.r.checked_add(value.r).unwrap_or(255),
+            g : self.g.checked_add(value.g).unwrap_or(255),
+            b : self.b.checked_add(value.b).unwrap_or(255),
+            a : self.a.checked_add(value.r).unwrap_or(255),
+        }
+    }
+}
+impl Sub<Color> for Color {
+    type Output = Color;
+    fn sub(self, value : Color) -> Color {
+        Color {
+            r : self.r.checked_sub(value.r).unwrap_or(0),
+            g : self.g.checked_sub(value.g).unwrap_or(0),
+            b : self.b.checked_sub(value.b).unwrap_or(0),
+            a : self.a.checked_sub(value.r).unwrap_or(0),
         }
     }
 }

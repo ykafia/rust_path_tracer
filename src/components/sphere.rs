@@ -38,7 +38,8 @@ impl Intersectable for Sphere {
         }
 
         let distance = if t0 < t1 { t0 } else { t1 };
-        let normal = (distance * &ray.direction) + &ray.origin;
+        let hitpoint = (distance * &ray.direction) + &ray.origin;
+        let normal = &hitpoint-self.center;
         Some(
             PointInfo{
                 distance : distance,

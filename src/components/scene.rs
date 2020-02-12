@@ -1,5 +1,7 @@
 use super::na::Vector3;
 use super::*;
+use std::f32::consts::PI;
+
 
 pub struct Scene {
     pub width: u32,
@@ -11,14 +13,14 @@ pub struct Scene {
 }
 
 impl Scene {
-    pub fn new(cameraPos : Vector3<f32>) -> Scene {
+    pub fn new(camera_pos : Vector3<f32>) -> Scene {
         let mut result = Scene {
             width: 600,
             height: 400,
             fov: 90.0,
             camera: Camera::new(
                 // position
-                cameraPos,
+                camera_pos,
                 // direction
                 Vector3::new(0f32, 0f32, 0f32).normalize()
             ),
@@ -36,7 +38,7 @@ impl Scene {
             
         };
         result.camera.change_rotation(
-            result.elements.first().expect("a vector").get_position() - cameraPos
+            result.elements.first().expect("a vector").get_position() - camera_pos
         );
         result
     }
@@ -49,12 +51,11 @@ impl Scene {
                     match element.intersect(&ray) {
                         Some(d) => {
                             if d.distance < temp.1 {
-                                let intensity = (d.normal.dot(&self.directional_light.direction)) * &self.directional_light.intensity;
-                                let reflected = element.get_albedo(); // /std::f32::consts::PI;
-                                //println!("intensity {} reflected {}",intensity,reflected);
+                                let intensity = d.normal.dot(&(-self.directional_light.direction)) * self.directional_light.intensity;
+                                let reflected = -element.get_albedo() / PI;
                                 temp.1 = d.distance;
-                                
-                                temp.0 = element.get_color() * intensity * reflected ;//* self.directional_light.color.clone();
+                                let absorbed = Colors::WHITE.value() - element.get_color();
+                                temp.0 = (self.directional_light.color.clone() - absorbed) * intensity * reflected ;
                             }
                         }
                         None => (),
