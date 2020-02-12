@@ -33,7 +33,7 @@ impl Scene {
             directional_light : DirectionalLight {
                 direction : Vector3::new(0f32,-1f32,-1f32),
                 color : Colors::WHITE.value(),
-                intensity : 0.5
+                intensity : 1.0
             }
             
         };
@@ -55,7 +55,7 @@ impl Scene {
                                 let reflected = -element.get_albedo() / PI;
                                 temp.1 = d.distance;
                                 let absorbed = Colors::WHITE.value() - element.get_color();
-                                temp.0 = (self.directional_light.color.clone() - absorbed) * intensity * reflected ;
+                                temp.0 = (self.directional_light.color.clone() - absorbed) * intensity * reflected;
                             }
                         }
                         None => (),
