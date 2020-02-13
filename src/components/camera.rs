@@ -19,7 +19,7 @@ impl Camera {
             rotation: Rotation3::face_towards(&direction,&Vector3::y()),
             width: 600,
             height: 400,
-            fov: 70f32,
+            fov: 90f32,
         }
     }
     pub fn change_rotation(&mut self, dir : Vector3<f32>) {

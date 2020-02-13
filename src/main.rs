@@ -28,7 +28,7 @@ fn render_multiple_scenes() {
     threads.push(thread::spawn(move || {
         let result = render_scene(
             &Scene::new(
-                Vector3::new(0f32,2f32,3f32)
+                Vector3::new(-2f32, 1.5f32, 0f32)
             )
         );
         println!("Rendering 2 done");
@@ -58,7 +58,7 @@ fn render_scene(scene: &Scene) -> DynamicImage {
     let mut image = DynamicImage::new_rgb8(scene.width, scene.height);
     for x in 0..scene.width {
         for y in 0..scene.height {
-            image.put_pixel(x, y, Color::new(0u8, 0u8, 255u8, 255).to_rgba());
+            image.put_pixel(x, y, Colors::BLACK.value().to_rgba());
         }
     }
     image = scene.fire_rays(&mut image);

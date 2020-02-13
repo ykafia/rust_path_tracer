@@ -21,6 +21,13 @@ impl Sphere {
 }
 
 impl Intersectable for Sphere {
+    fn simple_intersect(&self, ray: &Ray) -> bool {
+        let l = self.center - ray.origin;
+        let adj = l.dot(&ray.direction);
+        let d2 = l.dot(&l) - (adj * adj);
+        let radius2 = self.radius * self.radius;
+        d2 > radius2
+    }
     fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let l = self.center - ray.origin;
         let adj = l.dot(&ray.direction);
@@ -43,7 +50,8 @@ impl Intersectable for Sphere {
         Some(
             PointInfo{
                 distance : distance,
-                normal : normal.normalize()
+                normal : normal.normalize(),
+                intersection : hitpoint
             }
         )
     }

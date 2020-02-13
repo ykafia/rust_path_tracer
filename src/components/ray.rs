@@ -24,7 +24,7 @@ impl Ray {
     }
     pub fn from_camera(x: u32, y: u32, scene: &Scene) -> Ray {
         assert!(scene.width > scene.height);
-        let fov_adjustment = (scene.fov.to_radians() / 2.0).tan();
+        let fov_adjustment = (scene.camera.fov.to_radians() / 2.0).tan();
         let aspect_ratio = (scene.width as f32) / (scene.height as f32);
         let dir_x = ((((x as f32 + 0.5) / scene.width as f32) * 2.0 - 1.0) * aspect_ratio) * fov_adjustment;
         let dir_y = 1.0 - ((y as f32 + 0.5) / scene.height as f32) * 2.0;
