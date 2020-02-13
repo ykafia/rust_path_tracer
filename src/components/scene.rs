@@ -25,15 +25,15 @@ impl Scene {
                 Vector3::new(0f32, 0f32, 0f32).normalize()
             ),
             elements: vec![
-                Box::new(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1f32)),
+                Box::new(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1.0)),
                 Box::new(Sphere::new(0f32, 1f32, -4f32,Colors::RED,1.0)),
-                Box::new(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,0.8)),
+                Box::new(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
                 Box::new(Plane::new()),
             ],
             directional_light : DirectionalLight {
                 direction : Vector3::new(0f32,-1f32,-1f32),
                 color : Colors::WHITE.value(),
-                intensity : 1.0
+                intensity : 0.5
             }
             
         };
@@ -51,11 +51,13 @@ impl Scene {
                     match element.intersect(&ray) {
                         Some(d) => {
                             if d.distance < temp.1 {
-                                let intensity = d.normal.dot(&(-self.directional_light.direction)) * self.directional_light.intensity;
-                                let reflected = -element.get_albedo() / PI;
+                                let intensity = d.normal.dot(&(-self.directional_light.direction)).max(0.0) * self.directional_light.intensity;
+                                let reflected = element.get_albedo();
                                 temp.1 = d.distance;
                                 let absorbed = Colors::WHITE.value() - element.get_color();
-                                temp.0 = (self.directional_light.color.clone() - absorbed) * intensity * reflected;
+                                let final_color = self.directional_light.color.clone() - absorbed;
+                                temp.0 = final_color  * intensity * reflected;
+                               
                             }
                         }
                         None => (),

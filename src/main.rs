@@ -28,7 +28,7 @@ fn render_multiple_scenes() {
     threads.push(thread::spawn(move || {
         let result = render_scene(
             &Scene::new(
-                Vector3::new(0f32,0f32,0f32)
+                Vector3::new(0f32,2f32,3f32)
             )
         );
         println!("Rendering 2 done");
@@ -64,8 +64,4 @@ fn render_scene(scene: &Scene) -> DynamicImage {
     image = scene.fire_rays(&mut image);
     image
 }
-fn dotprod() {
-    let x = Vector3::new(1f32,1f32,0f32);
-    let y = Vector3::new(1f32,0f32,0f32);
-    println!("value is {}",x.dot(&y).acos());
-}
+

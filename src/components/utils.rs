@@ -61,7 +61,7 @@ impl Colors {
             Colors::MAGENTA => Color::new(255, 0, 255, 255),
             Colors::YELLOW => Color::new(255, 255, 0, 255),
             Colors::WHITE => Color::new(255, 255, 255, 255),
-            Colors::GREY => Color::new(50, 50, 50, 255),
+            Colors::GREY => Color::new(100, 100, 100, 255),
             Colors::SKYBLUE => Color::new(135,206,235,255),
             _ => Color::new(0, 0, 0, 255),
         }
