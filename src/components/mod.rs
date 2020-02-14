@@ -6,6 +6,7 @@ pub use self::ray::*;
 pub use self::scene::*;
 pub use self::sphere::*;
 pub use self::utils::*;
+pub use self::interpolation::*;
 
 mod camera;
 mod plane;
@@ -13,3 +14,4 @@ mod ray;
 mod scene;
 mod sphere;
 mod utils;
+mod interpolation;

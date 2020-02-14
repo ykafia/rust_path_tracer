@@ -2,14 +2,13 @@ use super::na::Vector3;
 use super::*;
 use std::f32::consts::PI;
 
-
 pub struct Scene {
     pub width: u32,
     pub height: u32,
     pub fov: f32,
     pub camera: Camera,
-    pub elements: Vec<Box<dyn Intersectable>>,
-    pub lights : Vec<DirectionalLight>
+    pub elements: Vec<Element>,
+    pub directional_light : DirectionalLight
 }
 
 impl Scene {
@@ -25,23 +24,16 @@ impl Scene {
                 Vector3::new(0f32, 0f32, 0f32).normalize()
             ),
             elements: vec![
-                Box::new(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1.0)),
-                Box::new(Sphere::new(0f32, 1f32, -4f32,Colors::RED,1.0)),
-                Box::new(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
-                Box::new(Plane::new()),
+                Element::Sphere(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1.0)),
+                Element::Sphere(Sphere::new(0f32, 1f32, -4f32,Colors::RED,1.0)),
+                Element::Sphere(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
+                Element::Plane(Plane::new()),
             ],
-            lights : vec![
-                DirectionalLight {
-                    direction : Vector3::new(0f32,-1f32,-1f32),
-                    color : Colors::WHITE.value(),
-                    intensity : 0.5
-                },
-                DirectionalLight {
-                    direction : Vector3::new(0f32,-1f32,1f32),
-                    color : Colors::WHITE.value(),
-                    intensity : 0.5
-                }
-            ]
+            directional_light : DirectionalLight {
+                direction : Vector3::new(0f32,-1f32,-1f32),
+                color : Colors::WHITE.value(),
+                intensity : 0.5
+            }
             
         };
         result.camera.change_rotation(
@@ -58,27 +50,12 @@ impl Scene {
                     match element.intersect(&ray) {
                         Some(d) => {
                             if d.distance < temp.1 {
-                                let mut color = Colors::BLACK.value();
-                                for light in &self.lights {
-                                    let intensity = d.normal.dot(&(-light.direction)).max(0.0) * light.intensity;
-                                    let reflected = element.get_albedo();
-                                    let absorbed = Colors::WHITE.value() - element.get_color();
-                                    let final_color = light.color.clone() - absorbed;
-                                    let shadowed = self.is_shadowed(
-                                        &Ray {
-                                            origin : d.intersection + 1e-5 * d.normal,
-                                            direction  : -light.direction.normalize()
-                                        },
-                                    );
-                                    color = color + match shadowed {
-                                        false => final_color  * intensity * reflected,
-                                        true => final_color  * 0.0 * reflected,
-                                    };
-
-                                }
-                                
+                                let intensity = d.normal.dot(&(-self.directional_light.direction)).max(0.0) * self.directional_light.intensity;
+                                let reflected = element.get_albedo();
                                 temp.1 = d.distance;
-                                temp.0  = color;
+                                let absorbed = Colors::WHITE.value() - element.get_color();
+                                let final_color = self.directional_light.color.clone() - absorbed;
+                                temp.0 = final_color  * intensity * reflected;
                                
                             }
                         }
@@ -91,20 +68,15 @@ impl Scene {
         }
         image.clone()
     }
-    pub fn is_shadowed(&self, ray : &Ray) -> bool {
-        let mut result = false;
-        for element in &self.elements {
-            match element.intersect(ray) {
-                Some(_) => result = true,
-                _ => ()
-            }
-        }
-        result
-    }
 }
 
+
+
+
+#[derive(Copy)]
 pub struct DirectionalLight {
     direction : Vector3<f32>,
     color : Color,
     intensity : f32
 }
+
