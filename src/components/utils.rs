@@ -46,7 +46,7 @@ pub struct PointInfo {
     pub intersection : Vector3<f32>
 }
 
-#[derive(Copy)]
+#[derive(Copy,Clone)]
 pub enum Element {
     Sphere(Sphere),
     Plane(Plane),

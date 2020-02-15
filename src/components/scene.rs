@@ -2,18 +2,18 @@ use super::na::Vector3;
 use super::*;
 use std::f32::consts::PI;
 
+#[derive(Copy,Clone)]
 pub struct Scene {
     pub width: u32,
     pub height: u32,
     pub fov: f32,
     pub camera: Camera,
-    pub elements: Vec<Element>,
     pub directional_light : DirectionalLight
 }
 
 impl Scene {
-    pub fn new(camera_pos : Vector3<f32>) -> Scene {
-        let mut result = Scene {
+    pub fn new(camera_pos : Vector3<f32>, target : Vector3<f32>) -> Scene {
+        Scene {
             width: 600,
             height: 400,
             fov: 90.0,
@@ -21,31 +21,22 @@ impl Scene {
                 // position
                 camera_pos,
                 // direction
-                Vector3::new(0f32, 0f32, 0f32).normalize()
+                target.normalize()
             ),
-            elements: vec![
-                Element::Sphere(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1.0)),
-                Element::Sphere(Sphere::new(0f32, 1f32, -4f32,Colors::RED,1.0)),
-                Element::Sphere(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
-                Element::Plane(Plane::new()),
-            ],
+            
             directional_light : DirectionalLight {
                 direction : Vector3::new(0f32,-1f32,-1f32),
                 color : Colors::WHITE.value(),
                 intensity : 0.5
             }
             
-        };
-        result.camera.change_rotation(
-            result.elements.first().expect("a vector").get_position() - camera_pos
-        );
-        result
+        }
     }
-    pub fn fire_rays(&self, image: &mut DynamicImage) -> DynamicImage {
+    pub fn fire_rays(&self, image: &mut DynamicImage, elements : &[Element]) -> DynamicImage {
         let mut temp: (Color, f32) = (Color::new(0.0, 0.0, 0.0, 0.0), std::f32::MAX);
         for x in 0..self.width {
             for y in 0..self.height {
-                for element in &self.elements {
+                for element in elements {
                     let ray = Ray::from_camera(x, y, self);
                     match element.intersect(&ray) {
                         Some(d) => {
@@ -73,7 +64,7 @@ impl Scene {
 
 
 
-#[derive(Copy)]
+#[derive(Copy,Clone)]
 pub struct DirectionalLight {
     direction : Vector3<f32>,
     color : Color,
