@@ -1,6 +1,6 @@
 use super::na::{Rotation3, Vector3};
 
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct Camera {
     pub position: Vector3<f32>,
     pub rotation: Rotation3<f32>,

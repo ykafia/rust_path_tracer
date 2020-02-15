@@ -1,6 +1,7 @@
 use super::na::{Rotation3, Vector3};
 use super::*;
 
+#[derive(Copy,Clone)]
 pub struct Sphere {
     pub center: Vector3<f32>,
     pub color: Color,

@@ -3,7 +3,7 @@ use image::{Pixel, Rgba};
 use std::ops::{Mul,Add,Sub};
 use std::convert::TryInto;
 
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct Color {
     pub r: f32,
     pub g: f32,
@@ -45,6 +45,46 @@ pub struct PointInfo {
     pub normal : Vector3<f32>,
     pub intersection : Vector3<f32>
 }
+
+#[derive(Copy,Clone)]
+pub enum Element {
+    Sphere(Sphere),
+    Plane(Plane),
+}
+impl Intersectable for Element {
+    fn simple_intersect(&self, ray: &Ray) -> bool {
+        match *self {
+            Element::Sphere(ref s) => s.simple_intersect(ray),
+            Element::Plane(ref p) => p.simple_intersect(ray)
+        }
+
+    }
+    fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
+        match *self {
+            Element::Sphere(ref s) => s.intersect(ray),
+            Element::Plane(ref p) => p.intersect(ray)
+        }
+    }
+    fn get_color(&self) -> Color {
+        match *self {
+            Element::Sphere(ref s) => s.get_color(),
+            Element::Plane(ref p) => p.get_color()
+        }
+    }
+    fn get_albedo(&self) -> f32 {
+        match *self {
+            Element::Sphere(ref s) => s.get_albedo(),
+            Element::Plane(ref p) => p.get_albedo()
+        }
+    }
+    fn get_position(&self) -> Vector3<f32> {
+        match *self {
+            Element::Sphere(ref s) => s.get_position(),
+            Element::Plane(ref p) => p.get_position()
+        }
+    }
+}
+
 
 pub trait Intersectable {
     fn intersect(&self, ray: &Ray) -> Option<PointInfo>;
