@@ -11,8 +11,8 @@ use std::fs::File;
 fn main() {
     
     // dotprod();
-    //render_multiple_scenes();
-    render_animation();
+    render_multiple_scenes();
+    // render_animation();
 }
 
 fn render_multiple_scenes() {
@@ -23,6 +23,18 @@ fn render_multiple_scenes() {
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
         Element::Plane(Plane::new())
     ];
+    let lights = [
+        DirectionalLight {
+            color : Colors::SKYBLUE.value(),
+            intensity : 0.5,
+            direction : Vector3::new(0.0,-1.0,-1.0)
+        },
+        DirectionalLight {
+            color : Colors::WHITE.value(),
+            intensity : 0.8,
+            direction : Vector3::new(0.0,-1.0,-1.5)
+        }
+    ];
     threads.push(thread::spawn(move || {
         let camerapos = Vector3::new(8f32, 2f32, -5f32);
         let result = render_scene(
@@ -30,7 +42,8 @@ fn render_multiple_scenes() {
                 camerapos,
                 &elements[0].get_position() - camerapos
             ),
-            &elements
+            &elements,
+            &lights
         );
         println!("Rendering 1 done");
         result.save("render1.png").unwrap();
@@ -42,7 +55,8 @@ fn render_multiple_scenes() {
                 camerapos,
                 &elements[0].get_position() - camerapos
             ),
-            &elements
+            &elements,
+            &lights
         );
         println!("Rendering 2 done");
         result.save("render2.png").unwrap();
@@ -54,7 +68,8 @@ fn render_multiple_scenes() {
                 camerapos,
                 &elements[0].get_position() - camerapos
             ),
-            &elements
+            &elements,
+            &lights
         );
         println!("Rendering 3 done");
         result.save("render3.png").unwrap();
@@ -72,8 +87,8 @@ fn render_animation() {
     println!("Rendering animation");
     let init_pos = Vector3::new(0.0, 0.0, 0.0);
     let b = Vector3::new(1.0, 1.0, 0.0);
-    let c = Vector3::new(2.0, 1.0, 1.0);
-    let d = Vector3::new(2.5, 1.0, 3.0);
+    let c = Vector3::new(8.0, 1.0, 3.0);
+    let d = Vector3::new(14.0, 1.0, 6.0);
     let mut frames: Vec<Frame> = Vec::new();
     let elements = [
         Element::Sphere(Sphere::new(0f32, 0f32, -3f32,Colors::BLUE,1.0)),
@@ -81,14 +96,26 @@ fn render_animation() {
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32,Colors::GREEN,1.0)),
         Element::Plane(Plane::new())
     ];
+    let lights = [
+        DirectionalLight {
+            color : Colors::BLUE.value(),
+            intensity : 0.5,
+            direction : Vector3::new(0.0,-1.0,-1.0)
+        },
+        DirectionalLight {
+            color : Colors::WHITE.value(),
+            intensity : 0.8,
+            direction : Vector3::new(0.0,-1.0,-1.5)
+        }
+    ];
     let mut scene = Scene::new(init_pos, &elements[0].get_position()-init_pos);
     for i in (0..100).step_by(4) {
         let mut threads = vec![];
         threads.push(thread::spawn(move || {
-            scene.camera.position = catmull(init_pos, b, c, d, i as f32 / 1000.0);
+            scene.camera.position = catmull(init_pos, b, c, d, i as f32 / 100.0);
             scene.camera.change_rotation(&elements[0].get_position() - scene.camera.position);
             Frame::new(
-                render_scene(&scene,&elements)
+                render_scene(&scene,&elements,&lights)
                     .as_rgba8()
                     .expect("Converted dynamic image to rgba8")
                     .clone(),
@@ -98,7 +125,7 @@ fn render_animation() {
             scene.camera.position = catmull(init_pos, b, c, d, i as f32 +1.0 / 1000.0);
             scene.camera.change_rotation(&elements[0].get_position() - scene.camera.position);
             Frame::new(
-                render_scene(&scene,&elements)
+                render_scene(&scene,&elements,&lights)
                     .as_rgba8()
                     .expect("Converted dynamic image to rgba8")
                     .clone(),
@@ -108,7 +135,7 @@ fn render_animation() {
             scene.camera.position = catmull(init_pos, b, c, d, i as f32 +2.0 / 1000.0);
             scene.camera.change_rotation(&elements[0].get_position() - scene.camera.position);
             Frame::new(
-                render_scene(&scene, &elements)
+                render_scene(&scene, &elements,&lights)
                     .as_rgba8()
                     .expect("Converted dynamic image to rgba8")
                     .clone(),
@@ -118,7 +145,7 @@ fn render_animation() {
             scene.camera.position = catmull(init_pos, b, c, d, i as f32 +3.0 / 1000.0);
             scene.camera.change_rotation(&elements[0].get_position() - scene.camera.position);
             Frame::new(
-                render_scene(&scene, &elements)
+                render_scene(&scene, &elements,&lights)
                     .as_rgba8()
                     .expect("Converted dynamic image to rgba8")
                     .clone(),
@@ -132,7 +159,7 @@ fn render_animation() {
     encoder.encode_frames(frames.into_iter()).unwrap();
 
 }
-fn render_scene(scene: &Scene, elements : &[Element]) -> DynamicImage {
+fn render_scene(scene: &Scene, elements : &[Element], lights : &[DirectionalLight]) -> DynamicImage {
     let mut image = DynamicImage::new_rgba8(scene.width, scene.height);
     for x in 0..scene.width {
         for y in 0..scene.height {
@@ -140,6 +167,6 @@ fn render_scene(scene: &Scene, elements : &[Element]) -> DynamicImage {
         }
     }
     
-    image = scene.fire_rays(&mut image,elements);
+    image = scene.fire_rays(&mut image,elements, lights);
     image
 }

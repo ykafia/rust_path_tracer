@@ -132,7 +132,7 @@ impl Mul<f32> for Color {
             r : self.r * value,
             g : self.g * value,
             b : self.b * value,
-            a : self.a * value,
+            a : self.a 
         }
     }
 }
@@ -143,7 +143,7 @@ impl Mul<Color> for Color {
             r : self.r * value.r,
             g : self.g * value.g,
             b : self.b * value.b,
-            a : self.a * value.a,
+            a : self.a 
         }
     }
 }
@@ -154,7 +154,7 @@ impl Add<Color> for Color {
             r : self.r + value.r,
             g : self.g + value.g,
             b : self.b + value.b,
-            a : self.a + value.a
+            a : self.a 
         }
     }
 }
@@ -165,7 +165,7 @@ impl Sub<Color> for Color {
             r : self.r - value.r,
             g : self.g - value.g,
             b : self.b - value.b,
-            a : self.a - value.a
+            a : self.a
         }
     }
 }
