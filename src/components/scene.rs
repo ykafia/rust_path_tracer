@@ -28,7 +28,7 @@ impl Scene {
         &self,
         image: &mut DynamicImage,
         elements: &[Element],
-        lights: &[DirectionalLight],
+        lights: &[Light],
     ) -> DynamicImage {
         let mut temp: (Color, f32) = (Color::new(0.0, 0.0, 0.0, 0.0), std::f32::MAX);
         for x in 0..self.width {
@@ -40,19 +40,19 @@ impl Scene {
                             if d.distance < temp.1 {
                                 let mut color = Colors::BLACK.value();
                                 for light in lights {
-                                    let intensity = d.normal.dot(&(-light.direction)).max(0.0)
-                                        * light.intensity;
+                                    let intensity = d.normal.dot(&(-light.get_direction(element))).max(0.0)
+                                        * light.get_intensity(d.intersection);
                                     let reflected = element.get_albedo() / PI;
                                     // let absorbed = Colors::WHITE.value() - element.get_color();
                                     // let final_color = light.color.clone() - absorbed;
                                     let shadowed = self.is_shadowed(&Ray {
                                         origin: d.intersection + 1e-5 * d.normal,
-                                        direction: -light.direction.normalize(),
+                                        direction: -light.get_direction(element).normalize(),
                                     }, elements);
                                     color = color
                                         + match shadowed {
-                                            false => element.get_color() * light.color * intensity * reflected,
-                                            true => element.get_color() * light.color * 0.0 * reflected,
+                                            false => element.get_color() * light.get_color() * intensity * reflected,
+                                            true => element.get_color() * light.get_color() * 0.0 * reflected,
                                         };
                                 }
 
@@ -81,9 +81,4 @@ impl Scene {
     }
 }
 
-#[derive(Copy, Clone)]
-pub struct DirectionalLight {
-    pub direction: Vector3<f32>,
-    pub color: Color,
-    pub intensity: f32,
-}
+

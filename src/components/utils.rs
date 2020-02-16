@@ -26,7 +26,7 @@ impl Color {
                 ((self.r * 255.0) as u32).try_into().unwrap_or(255), 
                 ((self.g * 255.0) as u32).try_into().unwrap_or(255), 
                 ((self.b * 255.0) as u32).try_into().unwrap_or(255), 
-                ((self.a * 255.0) as u32).try_into().unwrap_or(255)
+                255
             ],
         }
     }
@@ -119,7 +119,7 @@ impl Colors {
             Colors::WHITE => Color::new(1.0, 1.0, 1.0, 1.0),
             Colors::GREY => Color::new(100.0/255.0, 100.0/255.0, 100.0/255.0, 1.0),
             Colors::SKYBLUE => Color::new(135.0/255.0,206.0/255.0,235.0/255.0,1.0),
-            BLACK => Color::new(0.0,0.0,0.0, 1.0),
+            Colors::BLACK => Color::new(0.0,0.0,0.0, 1.0),
             _ => Color::new(0.0,0.0,0.0, 1.0)
         }
     }
