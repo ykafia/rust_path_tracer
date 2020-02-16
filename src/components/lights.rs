@@ -42,4 +42,10 @@ impl Light {
             }
         }
     }
+    pub fn set_position(&mut self, pos : Vector3<f32>){
+        match *self {
+            Light::PointLight(ref mut p) => p.position = pos,
+            _ => ()
+        }
+    }
 }
