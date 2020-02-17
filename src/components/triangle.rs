@@ -19,9 +19,9 @@ impl Triangle {
     }
     pub fn new_defined() -> Triangle {
         let coord = [
-            Vector3::new(1.0,1.0,-1.0),
-            Vector3::new(1.0,1.3,-1.0),
-            Vector3::new(1.0,1.3,-1.3)
+            Vector3::new(0.0,0.0,0.0),
+            Vector3::new(0.0,1.0,0.0),
+            Vector3::new(3.0,1.0,3.0)
         ];
         Triangle {
             coordinates : coord,
@@ -66,14 +66,13 @@ impl Intersectable for Triangle {
             let inside = {
                 let edge0 = self.coordinates[1] - self.coordinates[0];
                 let edge1 = self.coordinates[2] - self.coordinates[0];
-                let edge2 = self.coordinates[0] - self.coordinates[2];
+                // let edge2 = self.coordinates[0] - self.coordinates[2];
                 let c0 = intersection - self.coordinates[0];
                 let c1 = intersection - self.coordinates[1];
-                let c2 = intersection - self.coordinates[2];
+                // let c2 = intersection - self.coordinates[2];
                 if 
                     self.normal.dot(&(edge0.cross(&c0))) >0.0 &&
-                    self.normal.dot(&(edge1.cross(&c1))) >0.0 &&
-                    self.normal.dot(&(edge2.cross(&c2))) >0.0 {
+                    self.normal.dot(&(edge1.cross(&c1))) >0.0 {
                         true
                     }
                     else {
@@ -84,7 +83,7 @@ impl Intersectable for Triangle {
                 return Some(
                     PointInfo {
                         distance : t,
-                        normal : self.normal,
+                        normal : -self.normal,
                         intersection : intersection
                     }
                 );
