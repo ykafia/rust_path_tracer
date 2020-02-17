@@ -24,6 +24,7 @@ impl Scene {
             ),
         }
     }
+    #[allow(dead_code)]
     pub fn fire_rays(
         &self,
         image: &mut DynamicImage,

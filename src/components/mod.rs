@@ -8,6 +8,8 @@ pub use self::sphere::*;
 pub use self::utils::*;
 pub use self::interpolation::*;
 pub use self::lights::*;
+pub use self::triangle::*;
+
 
 mod camera;
 mod plane;
@@ -17,3 +19,4 @@ mod sphere;
 mod utils;
 mod interpolation;
 mod lights;
+mod triangle;
