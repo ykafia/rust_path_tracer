@@ -41,7 +41,13 @@ impl Intersectable for Triangle {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
-        denom > 1e-6
+        if denom > 1e-6 {
+            let p0l0 = self.get_position() - ray.origin;
+            let t = p0l0.dot(&normal) / denom;
+            t >= 0.0
+        } else {
+            false
+        }
     }
     fn get_position(&self) -> Vector3<f32> {
         self.coordinates
@@ -54,7 +60,7 @@ impl Intersectable for Triangle {
             None
         } else {
             let d = self.normal.dot(&self.coordinates[0]);
-            let t = -(self.normal.dot(&ray.origin) + d) / - self.normal.dot(&ray.direction);
+            let t = -(self.normal.dot(&ray.origin) + d) / self.normal.dot(&ray.direction);
             let intersection = ray.origin + t * ray.direction;
             Some(
                 PointInfo {

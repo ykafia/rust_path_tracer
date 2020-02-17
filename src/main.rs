@@ -21,18 +21,23 @@ fn render_multiple_scenes() {
         Element::Sphere(Sphere::new(0f32, 1f32, -4f32, Colors::RED, 1.0)),
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32, Colors::GREEN, 1.0)),
         Element::Plane(Plane::new()),
-        Element::Triangle(Triangle::new_defined())
+        // Element::Triangle(Triangle::new_defined())
     ];
     let lights = [
         Light::DirectionalLight(DirectionalLight {
             color: Colors::WHITE.value(),
-            intensity: 1.0,
+            intensity: 0.001,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
         Light::PointLight(PointLight {
             color: Colors::WHITE.value(),
-            intensity: 1.0,
+            intensity: 2.0,
             position: Vector3::new(0.0, 3.0, -6.5),
+        }),
+        Light::PointLight(PointLight {
+            color: Colors::RED.value(),
+            intensity: 1.0,
+            position: Vector3::new(1.0, 3.0, -2.5),
         }),
     ];
     threads.push(thread::spawn(move || {

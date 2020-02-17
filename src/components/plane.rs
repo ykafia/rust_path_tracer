@@ -24,7 +24,14 @@ impl Intersectable for Plane {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
-        denom > 1e-6
+        if denom > 1e-6 {
+            let p0l0 = self.position - ray.origin;
+            let t = p0l0.dot(&normal) / denom;
+            t >= 0.0
+        } else {
+            false
+        }
+        
     }
     fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let normal = &self.normal;

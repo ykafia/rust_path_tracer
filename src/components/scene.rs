@@ -79,7 +79,7 @@ impl Scene {
                     }
                 }
                 image.put_pixel(x, y, temp.0.to_rgba());
-                temp = (Colors::SKYBLUE.value(), std::f32::MAX);
+                temp = (lights[0].get_color() * lights[0].get_intensity(Vector3::new(0.0,0.0,0.0)) , std::f32::MAX);
             }
         }
         image.clone()
