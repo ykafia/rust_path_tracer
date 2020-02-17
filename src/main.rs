@@ -21,12 +21,12 @@ fn render_multiple_scenes() {
         Element::Sphere(Sphere::new(0f32, 1f32, -4f32, Colors::RED, 1.0)),
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32, Colors::GREEN, 1.0)),
         Element::Plane(Plane::new()),
-        // Element::Triangle(Triangle::new_defined())
+        Element::Triangle(Triangle::new_defined())
     ];
     let lights = [
         Light::DirectionalLight(DirectionalLight {
-            color: Colors::WHITE.value(),
-            intensity: 0.001,
+            color: Colors::SKYBLUE.value(),
+            intensity: 0.8,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
         Light::PointLight(PointLight {

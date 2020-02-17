@@ -19,9 +19,9 @@ impl Triangle {
     }
     pub fn new_defined() -> Triangle {
         let coord = [
-            Vector3::new(3.0,3.0,3.0),
-            Vector3::new(3.0,3.5,3.0),
-            Vector3::new(3.0,3.5,3.5)
+            Vector3::new(1.0,1.0,-1.0),
+            Vector3::new(1.0,1.3,-1.0),
+            Vector3::new(1.0,1.3,-1.3)
         ];
         Triangle {
             coordinates : coord,
@@ -56,20 +56,34 @@ impl Intersectable for Triangle {
             .sum()
     }
     fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
-        if !self.simple_intersect(ray) {
-            None
-        } else {
+        
+        let normal = &self.normal;
+        let denom = normal.dot(&ray.direction);
+        if denom > 1e-6 {
             let d = self.normal.dot(&self.coordinates[0]);
             let t = -(self.normal.dot(&ray.origin) + d) / self.normal.dot(&ray.direction);
             let intersection = ray.origin + t * ray.direction;
-            Some(
-                PointInfo {
-                    normal : -self.normal,
-                    intersection : intersection,
-                    distance : t
-                }
-            )
+            let inside = {
+                let dot1 = self.normal;
+                let dot2 = {
+                    let x = self.coordinates[1] - self.coordinates[0];
+                    let y = intersection - self.coordinates[0];
+                    x.cross(&y)
+                };
+                dot1.dot(&dot2) >= 0.0
+            };
+            if t >= 0.0 && inside {
+                return Some(
+                    PointInfo {
+                        distance : t,
+                        normal : self.normal,
+                        intersection : intersection
+                    }
+                );
+            }
         }
+        None
+    
         
         
     }
