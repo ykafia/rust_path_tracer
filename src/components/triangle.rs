@@ -64,13 +64,21 @@ impl Intersectable for Triangle {
             let t = -(self.normal.dot(&ray.origin) + d) / self.normal.dot(&ray.direction);
             let intersection = ray.origin + t * ray.direction;
             let inside = {
-                let dot1 = self.normal;
-                let dot2 = {
-                    let x = self.coordinates[1] - self.coordinates[0];
-                    let y = intersection - self.coordinates[0];
-                    x.cross(&y)
-                };
-                dot1.dot(&dot2) >= 0.0
+                let edge0 = self.coordinates[1] - self.coordinates[0];
+                let edge1 = self.coordinates[2] - self.coordinates[0];
+                let edge2 = self.coordinates[0] - self.coordinates[2];
+                let c0 = intersection - self.coordinates[0];
+                let c1 = intersection - self.coordinates[1];
+                let c2 = intersection - self.coordinates[2];
+                if 
+                    self.normal.dot(&(edge0.cross(&c0))) >0.0 &&
+                    self.normal.dot(&(edge1.cross(&c1))) >0.0 &&
+                    self.normal.dot(&(edge2.cross(&c2))) >0.0 {
+                        true
+                    }
+                    else {
+                        false
+                    }
             };
             if t >= 0.0 && inside {
                 return Some(
