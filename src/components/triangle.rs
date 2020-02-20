@@ -50,7 +50,7 @@ impl Intersectable for Triangle {
         }
     }
     fn get_position(&self) -> Vector3<f32> {
-        self.coordinates.to_vec().iter().sum()
+        (self.coordinates.to_vec().iter().sum::<Vector3<f32>>()) * (1.0/3.0)
     }
     fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let normal = &self.normal;

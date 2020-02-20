@@ -22,6 +22,7 @@ impl Camera {
             fov: 90f32,
         }
     }
+    #[allow(dead_code)]
     pub fn change_rotation(&mut self, dir : Vector3<f32>) {
         self.rotation = Rotation3::face_towards(&dir,&Vector3::y());
     }

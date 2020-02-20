@@ -49,7 +49,7 @@ impl Scene {
                                     // let final_color = light.color.clone() - absorbed;
                                     let shadowed = self.is_shadowed(
                                         &Ray {
-                                            origin: d.intersection + 1e-5 * d.normal,
+                                            origin: d.intersection + 1e-4 * d.normal,
                                             direction: -light.get_direction(element).normalize(),
                                         },
                                         elements,
@@ -127,13 +127,22 @@ impl Scene {
                                     let reflected = element.get_albedo() / PI;
                                     // let absorbed = Colors::WHITE.value() - element.get_color();
                                     // let final_color = light.color.clone() - absorbed;
-                                    let shadowed = self.is_shadowed(
+                                    let shadowed = match element{
+                                        Element::Triangle(_) => self.is_shadowed(
+                                            &Ray {
+                                                origin: d.intersection,
+                                                direction: -light.get_direction(element).normalize(),
+                                            },
+                                            elements,
+                                       ),
+                                       _ => self.is_shadowed(
                                         &Ray {
                                             origin: d.intersection + 1e-4 * d.normal,
                                             direction: -light.get_direction(element).normalize(),
                                         },
                                         elements,
-                                    );
+                                   ),
+                                    };
                                     color = color
                                         + match shadowed {
                                             false => {
@@ -173,14 +182,14 @@ pub enum Quarter {
     BOTTOMRIGHT,
 }
 
-
+#[allow(dead_code)]
 pub struct ImgParts {
     tl : DynamicImage,
     tr : DynamicImage,
     bl : DynamicImage,
     br : DynamicImage
 }
-
+#[allow(dead_code)]
 impl ImgParts {
     pub fn new(imgs : Vec<(Quarter, DynamicImage)>) -> ImgParts {
         let empty = DynamicImage::new_rgba8(1u32,1u32);

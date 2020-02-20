@@ -1,4 +1,4 @@
-use super::na::{Rotation3, Vector3};
+use super::na::{Vector3};
 use super::*;
 
 #[derive(Copy,Clone)]

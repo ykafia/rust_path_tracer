@@ -3,15 +3,14 @@ use components::*;
 
 use image::gif::Encoder;
 use image::*;
-use na::{Rotation3, Vector3};
+use na::{Vector3};
 use nalgebra as na;
 use std::fs::File;
 use std::thread;
 
 fn main() {
-    // dotprod();
     render_multiple_scenes();
-    render_animation();
+    // render_animation();
 }
 
 fn render_multiple_scenes() {
@@ -58,9 +57,9 @@ fn render_multiple_scenes() {
         result.save("render1.png").unwrap();
     }));
     threads.push(thread::spawn(move || {
-        let camerapos = Vector3::new(2f32, 3f32, -6f32);
+        let camerapos = Vector3::new(-2f32, 3f32, -6f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[1].get_position() - camerapos),
             &elements,
             &lights,
         );
@@ -68,9 +67,9 @@ fn render_multiple_scenes() {
         result.save("render2.png").unwrap();
     }));
     threads.push(thread::spawn(move || {
-        let camerapos = Vector3::new(0f32, 8f32, 0f32);
+        let camerapos = Vector3::new(-2f32, 4f32, -2f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[4].get_position() - camerapos),
             &elements,
             &lights,
         );
@@ -85,7 +84,7 @@ fn render_multiple_scenes() {
     let elapsed = now.elapsed();
     println!("time elapsed {:?}", elapsed);
 }
-
+#[allow(dead_code)]
 fn render_animation() {
     println!("Rendering animation");
     let init_pos = Vector3::new(-3.0, 1.0, 0.0);
@@ -98,7 +97,14 @@ fn render_animation() {
         Element::Sphere(Sphere::new(0f32, 1f32, -4f32, Colors::RED, 1.0)),
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32, Colors::GREEN, 1.0)),
         Element::Plane(Plane::new()),
-        Element::Triangle(Triangle::new_defined())
+        Element::Triangle(Triangle::new_defined()),
+        Element::Triangle(Triangle::new(
+            [Vector3::new(1.0, 4.0, 1.0),
+            Vector3::new(3.0, 6.0, 3.0),
+            Vector3::new(6.0, 6.0, 6.0)],
+            Colors::BLUE.value(),
+            0.8
+        ))
     ];
     let mut lights = [
         Light::DirectionalLight(DirectionalLight {
@@ -114,7 +120,7 @@ fn render_animation() {
     ];
     let mut scene = Scene::new(
         Vector3::new(0.5, 1.5, 2.0),
-        &elements[0].get_position() - init_pos,
+        &elements[5].get_position() - init_pos,
     );
     for i in (0..300).step_by(4) {
         let mut threads = vec![];

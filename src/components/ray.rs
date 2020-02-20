@@ -11,6 +11,7 @@ impl Ray {
     /// Let's switch to another type of problem with a camera and some math.
     /// First the fov will be the actual distance between the center of the image and the camera
     /// to get the angle : camera point - (center point + (get centered index))
+    #[allow(dead_code)]
     pub fn new(x: u32, y: u32, scene: &Scene) -> Ray {
         assert!(scene.width > scene.height);
         let fov_adjustment = (scene.fov.to_radians() / 2.0).tan();

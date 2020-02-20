@@ -1,5 +1,5 @@
 use super::*;
-use image::{Pixel, Rgba};
+use image::Rgba;
 use std::ops::{Mul,Add,Sub};
 use std::convert::TryInto;
 
@@ -10,7 +10,7 @@ pub struct Color {
     pub b: f32,
     pub a: f32,
 }
-
+#[allow(dead_code)]
 impl Color {
     pub fn new(red: f32, green: f32, blue: f32, alpha: f32) -> Color {
         Color {
@@ -30,6 +30,7 @@ impl Color {
             ],
         }
     }
+    
     pub fn normalize(&mut self) {
         self.r = self.r.min(0.0).max(0.0);
         self.g = self.g.min(0.0).max(0.0);
@@ -99,7 +100,7 @@ pub trait Intersectable {
     fn get_position(&self) -> Vector3<f32>;
     fn get_albedo(&self) -> f32;
 }
-
+#[allow(dead_code)]
 pub enum Colors {
     BLUE,
     RED,
@@ -125,8 +126,7 @@ impl Colors {
             Colors::WHITE => Color::new(1.0, 1.0, 1.0, 1.0),
             Colors::GREY => Color::new(100.0/255.0, 100.0/255.0, 100.0/255.0, 1.0),
             Colors::SKYBLUE => Color::new(135.0/255.0,206.0/255.0,235.0/255.0,1.0),
-            Colors::BLACK => Color::new(0.0,0.0,0.0, 1.0),
-            _ => Color::new(0.0,0.0,0.0, 1.0)
+            Colors::BLACK => Color::new(0.0,0.0,0.0, 1.0)
         }
     }
 }

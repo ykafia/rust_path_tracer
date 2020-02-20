@@ -1,5 +1,5 @@
 use super::*;
-
+#[allow(dead_code)]
 pub fn catmull(
     a: Vector3<f32>,
     b: Vector3<f32>,
