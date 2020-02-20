@@ -60,7 +60,7 @@ fn render_multiple_scenes() {
     threads.push(thread::spawn(move || {
         let camerapos = Vector3::new(2f32, 3f32, -6f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[0].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
             &elements,
             &lights,
         );
@@ -70,7 +70,7 @@ fn render_multiple_scenes() {
     threads.push(thread::spawn(move || {
         let camerapos = Vector3::new(0f32, 8f32, 0f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[0].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
             &elements,
             &lights,
         );
