@@ -129,7 +129,7 @@ impl Scene {
                                     // let final_color = light.color.clone() - absorbed;
                                     let shadowed = self.is_shadowed(
                                         &Ray {
-                                            origin: d.intersection + 1e-5 * d.normal,
+                                            origin: d.intersection + 1e-4 * d.normal,
                                             direction: -light.get_direction(element).normalize(),
                                         },
                                         elements,

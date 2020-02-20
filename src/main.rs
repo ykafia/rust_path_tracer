@@ -21,7 +21,14 @@ fn render_multiple_scenes() {
         Element::Sphere(Sphere::new(0f32, 1f32, -4f32, Colors::RED, 1.0)),
         Element::Sphere(Sphere::new(1f32, 1f32, -1f32, Colors::GREEN, 1.0)),
         Element::Plane(Plane::new()),
-        Element::Triangle(Triangle::new_defined())
+        Element::Triangle(Triangle::new_defined()),
+        Element::Triangle(Triangle::new(
+            [Vector3::new(1.0, 4.0, 1.0),
+            Vector3::new(3.0, 6.0, 3.0),
+            Vector3::new(6.0, 6.0, 6.0)],
+            Colors::BLUE.value(),
+            0.8
+        ))
     ];
     let lights = [
         Light::DirectionalLight(DirectionalLight {
@@ -41,9 +48,9 @@ fn render_multiple_scenes() {
         }),
     ];
     threads.push(thread::spawn(move || {
-        let camerapos = Vector3::new(8f32, 2f32, -5f32);
+        let camerapos = Vector3::new(-8f32, 3f32, -5f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[0].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
             &elements,
             &lights,
         );
@@ -51,7 +58,7 @@ fn render_multiple_scenes() {
         result.save("render1.png").unwrap();
     }));
     threads.push(thread::spawn(move || {
-        let camerapos = Vector3::new(2f32, 1f32, -6f32);
+        let camerapos = Vector3::new(2f32, 3f32, -6f32);
         let result = render_scene(
             &Scene::new(camerapos, &elements[0].get_position() - camerapos),
             &elements,
@@ -183,7 +190,7 @@ fn render_scene(scene: &Scene, elements: &[Element], lights: &[Light]) -> Dynami
     image = scene.fire_rays(&mut image, elements, lights);
     image
 }
-
+#[allow(dead_code)]
 fn render_quarter_scene(
     scene: &Scene,
     elements: &[Element],
