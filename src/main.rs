@@ -11,7 +11,7 @@ use std::thread;
 fn main() {
     // dotprod();
     render_multiple_scenes();
-    // render_animation();
+    render_animation();
 }
 
 fn render_multiple_scenes() {
