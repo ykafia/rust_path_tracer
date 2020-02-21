@@ -22,9 +22,9 @@ fn render_multiple_scenes() {
         Element::Plane(Plane::new()),
         Element::Triangle(Triangle::new_defined()),
         Element::Triangle(Triangle::new(
-            [Vector3::new(1.0, 4.0, 1.0),
-            Vector3::new(3.0, 6.0, 3.0),
-            Vector3::new(6.0, 6.0, 6.0)],
+            [Vector3::new(1.0, 3.0, 2.0),
+            Vector3::new(12.0, 5.0, 2.0),
+            Vector3::new(-6.0, 4.0, -4.0)],
             Colors::BLUE.value(),
             0.8
         ))
@@ -32,17 +32,17 @@ fn render_multiple_scenes() {
     let lights = [
         Light::DirectionalLight(DirectionalLight {
             color: Colors::SKYBLUE.value(),
-            intensity: 0.8,
+            intensity: 0.4,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
         Light::PointLight(PointLight {
             color: Colors::WHITE.value(),
-            intensity: 2.0,
+            intensity: 0.5,
             position: Vector3::new(0.0, 3.0, -6.5),
         }),
         Light::PointLight(PointLight {
             color: Colors::RED.value(),
-            intensity: 1.0,
+            intensity: 3.0,
             position: Vector3::new(1.0, 3.0, -2.5),
         }),
     ];
@@ -69,7 +69,7 @@ fn render_multiple_scenes() {
     threads.push(thread::spawn(move || {
         let camerapos = Vector3::new(-2f32, 4f32, -2f32);
         let result = render_scene(
-            &Scene::new(camerapos, &elements[4].get_position() - camerapos),
+            &Scene::new(camerapos, &elements[5].get_position() - camerapos),
             &elements,
             &lights,
         );

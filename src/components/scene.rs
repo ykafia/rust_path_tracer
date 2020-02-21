@@ -125,24 +125,13 @@ impl Scene {
                                         d.normal.dot(&(-light.get_direction(element))).max(0.0)
                                             * light.get_intensity(d.intersection);
                                     let reflected = element.get_albedo() / PI;
-                                    // let absorbed = Colors::WHITE.value() - element.get_color();
-                                    // let final_color = light.color.clone() - absorbed;
-                                    let shadowed = match element{
-                                        Element::Triangle(_) => self.is_shadowed(
-                                            &Ray {
-                                                origin: d.intersection,
-                                                direction: -light.get_direction(element).normalize(),
-                                            },
-                                            elements,
-                                       ),
-                                       _ => self.is_shadowed(
+                                    let shadowed = self.is_shadowed(
                                         &Ray {
                                             origin: d.intersection + 1e-4 * d.normal,
                                             direction: -light.get_direction(element).normalize(),
                                         },
-                                        elements,
-                                   ),
-                                    };
+                                        elements
+                                    );
                                     color = color
                                         + match shadowed {
                                             false => {
