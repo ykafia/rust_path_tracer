@@ -22,9 +22,9 @@ fn render_multiple_scenes() {
         Element::Plane(Plane::new()),
         Element::Triangle(Triangle::new_defined()),
         Element::Triangle(Triangle::new(
-            [Vector3::new(1.0, 3.0, 2.0),
-            Vector3::new(12.0, 5.0, 2.0),
-            Vector3::new(-6.0, 4.0, -4.0)],
+            [Vector3::new(0.0, 0.0, 0.0),
+            Vector3::new(0.0, 5.0, 0.0),
+            Vector3::new(5.0, 0.0, 5.0)],
             Colors::BLUE.value(),
             0.8
         ))
