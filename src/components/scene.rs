@@ -204,37 +204,35 @@ impl Scene {
                     Some(v) => {
                         let closest_element = v.0;
                         let closest_point = v.1;
-                        let light_values = lights
+                        let final_color = lights
                             .iter()
-                            .map(|light| match self.is_shadowed(&ray, &elements) {
-                                true => light.get_color() * 0.0,
-                                false => {
-                                    let intensity = closest_point
-                                        .normal
-                                        .dot(&(-light.get_direction(&closest_element)))
-                                        .max(0.0)
-                                        * light.get_intensity(closest_point.intersection);
-                                    let reflected = closest_element.get_albedo() / PI;
-                                    light.get_color() * intensity * reflected
+                            .map(|light| {
+                                let intensity = closest_point
+                                    .normal
+                                    .dot(&(-light.get_direction(&closest_element)))
+                                    .max(0.0)
+                                    * light.get_intensity(closest_point.intersection);
+                                let reflected = closest_element.get_albedo() / PI;
+                                match self.is_shadowed(&ray, &elements) {
+                                    false => closest_element.get_color()* light.get_color() * 0.0 * reflected,
+                                    true => closest_element.get_color()* light.get_color() * intensity * reflected,
                                 }
                             })
                             .collect::<Vec<Color>>()
                             .into_iter()
-                            .sum();
-                        (closest_element.get_color() + light_values).to_rgba()
-                    },
+                            .sum::<Color>();
+                        final_color.to_rgba()
+                    }
                     None => {
-                        let mut temp_color = Colors::BLACK.value();
+                        let mut intensity = 1.0;
                         for l in lights {
-                            temp_color = 
-                                temp_color + 
-                                match l {
-                                    Light::DirectionalLight(v) => v.color,
-                                    _ => Colors::BLACK.value()
-                            };
+                            intensity = intensity
+                                * match l {
+                                    Light::DirectionalLight(v) => v.intensity,
+                                    _ => 1.0,
+                                };
                         }
-                        Colors::SKYBLUE.value().to_rgba()
-                    
+                        (Colors::SKYBLUE.value() * intensity).to_rgba()
                     }
                 }
             })
