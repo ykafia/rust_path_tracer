@@ -63,5 +63,5 @@ fn render_scene_before() {
 
     let scene = Scene::new(Vector3::new(3.0,6.0,3.0), Vector3::new(0.,0.,0.));
     image = scene.fire_rays(&mut image, &elements, &lights);
-    image.save("./renders/rayon_image.jpg").expect("file saved")
+    image.save("./renders/rayon_image.png").expect("file saved")
 }
