@@ -7,6 +7,13 @@ pub struct DirectionalLight {
     pub intensity: f32,
 }
 
+impl DirectionalLight {
+    pub fn new(direction: Vector3<f32>, color: Color, intensity: f32) -> Self { Self { direction, color, intensity } }
+}
+
+
+
+
 #[derive(Copy, Clone)]
 pub struct PointLight {
     pub position: Vector3<f32>,

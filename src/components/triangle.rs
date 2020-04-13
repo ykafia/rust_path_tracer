@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone,Debug)]
 pub struct Triangle {
     pub coordinates: [Vector3<f32>; 3],
     pub color: Color,

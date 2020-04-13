@@ -1,7 +1,7 @@
 use super::na::{Vector3};
 use super::*;
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub struct Plane {
     pub position: Vector3<f32>,
     pub normal: Vector3<f32>,

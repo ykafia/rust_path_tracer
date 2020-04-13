@@ -1,10 +1,12 @@
 use super::na::Vector3;
 use super::*;
 
+#[derive(Clone,Copy)]
 pub struct Ray {
     pub origin: Vector3<f32>,
     pub direction: Vector3<f32>,
 }
+
 
 impl Ray {
     /// X and Y are the coordinates of the pixels
@@ -29,6 +31,8 @@ impl Ray {
         let aspect_ratio = (scene.width as f32) / (scene.height as f32);
         let dir_x = ((((x as f32 + 0.5) / scene.width as f32) * 2.0 - 1.0) * aspect_ratio) * fov_adjustment;
         let dir_y = 1.0 - ((y as f32 + 0.5) / scene.height as f32) * 2.0;
+        // println!("{}",(scene.camera.rotation * Vector3::new(dir_x, dir_y, 1f32).normalize()).normalize());
+        
         Ray {
             origin: scene.camera.position,
             direction: (scene.camera.rotation * Vector3::new(dir_x, dir_y, 1f32).normalize()).normalize(),

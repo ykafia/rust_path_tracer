@@ -4,8 +4,8 @@ use super::na::{Rotation3, Vector3};
 pub struct Camera {
     pub position: Vector3<f32>,
     pub rotation: Rotation3<f32>,
-    pub width: u32,
-    pub height: u32,
+    pub width: usize,
+    pub height: usize,
     pub fov: f32,
 }
 
