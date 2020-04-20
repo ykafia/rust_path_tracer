@@ -20,28 +20,28 @@ fn render_scene() {
         // Element::Triangle(Triangle::new_defined()),
         Element::Triangle(Triangle::new(
             [Vector3::new(0.0, 0.0, 0.0),
-            Vector3::new(0.0, 5.0, 0.0),
-            Vector3::new(5.0, 0.0, 5.0)],
+            Vector3::new(0.0, 1.0, 0.0),
+            Vector3::new(1.0, 0.0, 1.0)],
             Colors::BLUE.value(),
             0.2
         ))
     ];
     let lights = [
-        Light::DirectionalLight(DirectionalLight {
+        Light::PointLight(PointLight {
             color: Colors::SKYBLUE.value(),
             intensity: 1.0,
-            direction: Vector3::new(0.0, -1.0, -1.0),
+            position : Vector3::new(0.0, 2.0, 1.0),
         }),
         Light::DirectionalLight(DirectionalLight {
             color: Colors::WHITE.value(),
-            intensity: 0.5,
+            intensity: 1.0,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
     ];
     let mut image = 
         DynamicImage::new_rgb8(600, 400);
 
-    let camera_pos = Vector3::new(-6.0,2.0,8.0);
+    let camera_pos = Vector3::new(-0.0,3.0,-1.0);
     let scene = Scene::new(
         camera_pos, 
         elements[0].get_position() - camera_pos
