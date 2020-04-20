@@ -68,6 +68,6 @@ fn render_scene_before() {
         DynamicImage::new_rgb8(600, 400);
     let camera_pos = Vector3::new(-6.0,2.0,8.0);
     let scene = Scene::new(camera_pos, Vector3::new(0.,0.,0.)-camera_pos);
-    image = scene.fire_rays(&mut image, &elements, &lights);
+    image = scene.rayon_rays(&mut image, &elements, &lights);
     image.save("./renders/rayon_image.png").expect("file saved")
 }
