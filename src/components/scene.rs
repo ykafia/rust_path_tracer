@@ -49,8 +49,8 @@ impl Scene {
             },
             elements,
         ) {
-            true => element.get_color() * light.get_color() * 0.0 * reflected,
-            false => element.get_color() * light.get_color() * intensity * reflected
+            true => element.get_color(pf.intersection) * light.get_color() * 0.0 * reflected,
+            false => element.get_color(pf.intersection) * light.get_color() * intensity * reflected
         }
     }
     

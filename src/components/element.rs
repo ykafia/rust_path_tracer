@@ -1,11 +1,11 @@
 use super::*;
 #[derive(Copy,Clone,Debug)]
-pub enum Element {
-    Sphere(Sphere),
+pub enum Element<'a> {
+    Sphere(Sphere<'a>),
     Plane(Plane),
     Triangle(Triangle)
 }
-impl Intersectable for Element {
+impl<'a> Intersectable for Element<'a> {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         match *self {
             Element::Sphere(ref s) => s.simple_intersect(ray),
@@ -21,11 +21,11 @@ impl Intersectable for Element {
             Element::Triangle(ref t) => t.intersect(ray)
         }
     }
-    fn get_color(&self) -> Color {
+    fn get_color(&self, intersection : Vector3<f32>) -> Color {
         match *self {
-            Element::Sphere(ref s) => s.get_color(),
-            Element::Plane(ref p) => p.get_color(),
-            Element::Triangle(ref t) => t.get_color()
+            Element::Sphere(ref s) => s.get_color(intersection),
+            Element::Plane(ref p) => p.get_color(intersection),
+            Element::Triangle(ref t) => t.get_color(intersection)
         }
     }
     fn get_albedo(&self) -> f32 {
@@ -40,6 +40,13 @@ impl Intersectable for Element {
             Element::Sphere(ref s) => s.get_position(),
             Element::Plane(ref p) => p.get_position(),
             Element::Triangle(ref t) => t.get_position()
+        }
+    }
+    fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
+        match *self {
+            Element::Sphere(ref s) => s.get_texcoord(intersect),
+            Element::Plane(ref p) => p.get_texcoord(intersect),
+            Element::Triangle(ref t) => t.get_texcoord(intersect)
         }
     }
 }

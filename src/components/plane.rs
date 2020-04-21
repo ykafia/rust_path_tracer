@@ -51,7 +51,7 @@ impl Intersectable for Plane {
         }
         None
     }
-    fn get_color(&self) -> Color {
+    fn get_color(&self, intersection : Vector3<f32>) -> Color {
         self.color.clone()
     }
     fn get_position(&self) -> Vector3<f32> {
@@ -60,4 +60,21 @@ impl Intersectable for Plane {
     fn get_albedo(&self) -> f32 {
         self.albedo
     }
+    fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
+        let mut x_axis : Vector3<f32> = self.normal.cross(&Vector3::z());
+        
+        if vector_length(x_axis) == 0.0 {
+            x_axis = self.normal.cross(&Vector3::y());
+        }
+        
+        let y_axis : Vector3<f32> = self.normal.cross(&x_axis);
+
+        let plane_point = intersect - self.position;
+        TexCoord {
+            x : plane_point.dot(&x_axis),
+            y : plane_point.dot(&y_axis)
+        }
+    }
 }
+
+

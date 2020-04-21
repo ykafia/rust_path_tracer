@@ -76,12 +76,56 @@ impl Intersectable for Triangle {
 
        
     }
-    fn get_color(&self) -> Color {
+    fn get_color(&self, intersection : Vector3<f32>) -> Color {
         self.color
     }
     fn get_albedo(&self) -> f32 {
         self.albedo
     }
+    fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
+        // let triangle_area = compute_triangle_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);
+        
+        // This is the old way, calculating the triangle areas and all
+        // let u = 
+        //     //CAP area
+        //     compute_triangle_area(self.coordinates[2], self.coordinates[0], intersect)/triangle_area;
+        // let v = 
+        //     // ABP area
+        //     compute_triangle_area(self.coordinates[0], self.coordinates[1], intersect)/triangle_area;
+
+        // let w = 
+        //     //BCP area
+        //     compute_triangle_area(self.coordinates[1], self.coordinates[2], intersect)/triangle_area;
+        // 
+        // But we're going to use a simpler math : 
+        // Tri Area / Tri Area = Parallelogram Area * 0.5 / Parallelogram Area * 0.5
+        //                     = Parallelogram Area / Parallelogram Area
+        let parallelogram_area = |x : Vector3<f32>,y : Vector3<f32>, pivot : Vector3<f32>|  vector_length(x-pivot) * vector_length(y-pivot);
+        
+        let tri_p = parallelogram_area(self.coordinates[0],self.coordinates[1], self.coordinates[2]);
+       
+        //CAP
+        let u = parallelogram_area(self.coordinates[2],self.coordinates[0],intersect)/tri_p;
+
+        //ABP
+        let v = parallelogram_area(self.coordinates[0],self.coordinates[1],intersect)/tri_p;
+
+        //BCP
+        let w = 1.0-u-v;
+        
+        TexCoord {
+            x : u,
+            y : v
+        }
+        
+
+    }
+}
+
+fn compute_triangle_area( a : Vector3<f32>, b : Vector3<f32>, intersection : Vector3<f32>) -> f32 {
+    let edge_1 = vector_length(b-intersection);
+    let edge_2 = vector_length(a-intersection);
+    edge_1*edge_2*0.5
 }
 
 

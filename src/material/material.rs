@@ -1,23 +1,23 @@
 use super::*;
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub struct Material<'a> {
-    albedo : f32,
-    emissive : Emissive<'a>
+    pub albedo : f32,
+    pub emissive : Emissive<'a>
 }
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub struct Texture<'a> {
-    pixels : &'a [Rgba<u8>]
+    pub pixels : &'a [Rgba<u8>]
 }
 
 #[derive(Copy,Clone)]
 pub struct TexCoord {
-    x : usize,
-    y : usize
+    pub x : f32,
+    pub y : f32
 }
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub enum Emissive<'a> {
     Color(Color),
     Texture(Texture<'a>)
@@ -33,5 +33,4 @@ impl<'a> Emissive<'a> {
             }
         }
     }
-
 }

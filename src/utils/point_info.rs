@@ -28,16 +28,16 @@ impl PartialOrd<PointInfo> for PointInfo {
 }
 
 #[derive(Debug,Clone,Copy)]
-pub struct RayInfo(pub Element,pub PointInfo);
+pub struct RayInfo<'a>(pub Element<'a>,pub PointInfo);
 
 
 
-impl PartialEq<RayInfo> for RayInfo {
+impl<'a> PartialEq<RayInfo<'a>> for RayInfo<'a> {
     fn eq(&self, other: &RayInfo) -> bool { 
         self.1 == other.1
     }
 }
-impl PartialOrd<RayInfo> for RayInfo {
+impl<'a> PartialOrd<RayInfo<'a>> for RayInfo<'a> {
     fn partial_cmp(&self, other: &RayInfo) -> Option<std::cmp::Ordering> {
         if self.1 > other.1 {
             Some(std::cmp::Ordering::Greater)
@@ -50,9 +50,9 @@ impl PartialOrd<RayInfo> for RayInfo {
         }
     }
 }
-impl Eq for RayInfo {}
+impl<'a> Eq for RayInfo<'a> {}
 
-impl Ord for RayInfo {
+impl<'a> Ord for RayInfo<'a> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering { 
         if self.1 > other.1 {
             std::cmp::Ordering::Greater

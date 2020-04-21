@@ -28,3 +28,7 @@ pub fn catmull(
 
     result
 }
+
+pub fn vector_length(point : Vector3<f32>) -> f32 {
+    (point.x*point.x + point.y*point.y + point.z*point.z).sqrt()
+}
