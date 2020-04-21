@@ -10,9 +10,13 @@ use image::gif::Encoder;
 use image::*;
 use na::{Vector3};
 use nalgebra as na;
+use std::time::*;
 
 fn main() {
+    let first = Instant::now();
     render_scene();
+    let last = Instant::now();
+    println!("{} fps", 1.0/(last-first).as_secs_f64());
 }
 fn render_scene() {
     let elements = [
