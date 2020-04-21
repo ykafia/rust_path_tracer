@@ -10,10 +10,10 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(x: f32, y: f32, z: f32, color : Colors,albedo : f32) -> Sphere {
+    pub fn new(x: f32, y: f32, z: f32, radius : f32, color : Colors,albedo : f32) -> Sphere {
         Sphere {
             center: Vector3::new(x, y, z),
-            radius: 1.0,
+            radius: radius,
             color: color.value(),
             albedo : albedo
         }

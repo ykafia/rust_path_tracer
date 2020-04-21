@@ -41,7 +41,7 @@ impl Scene {
             .dot(&(-light.get_direction(&element)))
             .max(0.0)
             * light.get_intensity(pf.intersection);
-        let reflected = element.get_albedo() / PI*2.0;
+        let reflected = element.get_albedo() / PI;
         match self.is_shadowed(
             &Ray {
                 origin: pf.intersection + 1e-4 * pf.normal,
