@@ -2,25 +2,26 @@ use super::na::{Vector3};
 use super::*;
 
 #[derive(Copy,Clone,Debug)]
-pub struct Plane {
+pub struct Plane<'a> {
     pub position: Vector3<f32>,
     pub normal: Vector3<f32>,
-    pub color: Color,
-    pub albedo : f32,
+    pub material : Material<'a>
 }
 
-impl Plane {
-    pub fn new() -> Plane {
+impl<'a> Plane<'a> {
+    pub fn new() -> Plane<'a> {
         Plane {
             position: Vector3::new(0f32, -0.5f32, 0f32),
             normal: Vector3::new(0f32, -1f32, 0f32),
-            color: Colors::GREY.value(),
-            albedo : 1.0
+            material : Material {
+                emissive : Emissive::Color(Colors::GREY.value()),
+                albedo : 1.0
+            }
         }
     }
 }
 
-impl Intersectable for Plane {
+impl<'a> Intersectable for Plane<'a> {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
@@ -52,13 +53,15 @@ impl Intersectable for Plane {
         None
     }
     fn get_color(&self, intersection : Vector3<f32>) -> Color {
-        self.color.clone()
+        self.material.emissive.color(
+            &self.get_texcoord(intersection)
+        )
     }
     fn get_position(&self) -> Vector3<f32> {
         self.position
     }
     fn get_albedo(&self) -> f32 {
-        self.albedo
+        self.material.albedo
     }
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
         let mut x_axis : Vector3<f32> = self.normal.cross(&Vector3::z());

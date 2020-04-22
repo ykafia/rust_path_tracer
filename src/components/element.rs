@@ -2,8 +2,8 @@ use super::*;
 #[derive(Copy,Clone,Debug)]
 pub enum Element<'a> {
     Sphere(Sphere<'a>),
-    Plane(Plane),
-    Triangle(Triangle)
+    Plane(Plane<'a>),
+    Triangle(Triangle<'a>)
 }
 impl<'a> Intersectable for Element<'a> {
     fn simple_intersect(&self, ray: &Ray) -> bool {

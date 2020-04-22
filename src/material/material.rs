@@ -8,7 +8,21 @@ pub struct Material<'a> {
 
 #[derive(Copy,Clone,Debug)]
 pub struct Texture<'a> {
-    pub pixels : &'a [Rgba<u8>]
+    pub pixels : &'a [Rgba<u8>],
+    pub width : usize,
+    pub height : usize
+}
+
+impl<'a> Texture<'a> {
+    pub fn get_pixel(&self, x : usize, y : usize) -> Rgba<u8> {
+        if y>self.width {
+            panic!("{} is too big, width is {}",y,self.width);
+        }
+        if x>self.height {
+            panic!("{} is too big, height is {}",x,self.height);
+        }
+        self.pixels[x*self.width + y]
+    }
 }
 
 #[derive(Copy,Clone)]
@@ -29,7 +43,10 @@ impl<'a> Emissive<'a> {
         match *self {
             Emissive::Color(c) => c,
             Emissive::Texture(t) => {
-                Colors::YELLOW.value()
+                Color::from(t.get_pixel(
+                    (coord.x * t.height as f32) as usize,
+                    (coord.y * t.width as f32) as usize
+                ))
             }
         }
     }

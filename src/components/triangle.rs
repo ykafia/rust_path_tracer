@@ -1,23 +1,24 @@
 use super::*;
 
 #[derive(Copy, Clone,Debug)]
-pub struct Triangle {
+pub struct Triangle<'a> {
     pub coordinates: [Vector3<f32>; 3],
-    pub color: Color,
-    pub normal: Vector3<f32>,
-    pub albedo: f32,
+    pub normal : Vector3<f32>,
+    pub material : Material<'a>
 }
 
-impl Triangle {
-    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle {
+impl<'a> Triangle<'a> {
+    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle<'a> {
         Triangle {
             coordinates: coord,
-            color: col,
-            normal: Triangle::calculate_normal(coord),
-            albedo: albedo,
+            normal : Triangle::calculate_normal(coord),
+            material : Material {
+                albedo : albedo,
+                emissive : Emissive::Color(col)
+            }
         }
     }
-    pub fn new_defined() -> Triangle {
+    pub fn new_defined() -> Triangle<'a> {
         let coord = [
             Vector3::new(0.0, 2.0, 0.0),
             Vector3::new(0.0, 5.0, 0.0),
@@ -25,9 +26,11 @@ impl Triangle {
         ];
         Triangle {
             coordinates: coord,
-            color: Colors::YELLOW.value(),
-            normal: Triangle::calculate_normal(coord),
-            albedo: 1.0,
+            normal : Triangle::calculate_normal(coord),
+            material : Material {
+                albedo : 1.0,
+                emissive : Emissive::Color(Colors::BLUE.value())
+            }
         }
     }
     fn calculate_normal(coord: [Vector3<f32>; 3]) -> Vector3<f32> {
@@ -37,7 +40,7 @@ impl Triangle {
     }
 }
 
-impl Intersectable for Triangle {
+impl<'a> Intersectable for Triangle<'a> {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
@@ -77,10 +80,12 @@ impl Intersectable for Triangle {
        
     }
     fn get_color(&self, intersection : Vector3<f32>) -> Color {
-        self.color
+        self.material.emissive.color(
+            &self.get_texcoord(intersection)
+        )
     }
     fn get_albedo(&self) -> f32 {
-        self.albedo
+        self.material.albedo
     }
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
         // let triangle_area = compute_triangle_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);

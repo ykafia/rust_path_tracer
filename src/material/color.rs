@@ -135,3 +135,14 @@ impl Sub<Color> for Color {
         }
     }
 }
+impl From<Rgba<u8>> for Color {
+    fn from(col : Rgba<u8>) -> Self { 
+        Color {
+            r : col.0[0] as f32 / 255.0,
+            g : col.0[1] as f32 / 255.0,
+            b : col.0[2] as f32 / 255.0,
+            a : col.0[3] as f32 / 255.0,
+        }
+    }
+    
+}
