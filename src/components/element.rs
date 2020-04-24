@@ -1,5 +1,4 @@
 use super::*;
-#[derive(Clone)]
 pub enum Element {
     Sphere(Sphere),
     Plane(Plane),

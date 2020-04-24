@@ -74,8 +74,8 @@ impl Scene {
                 let ray = Ray::from_camera(*x, *y, self);
                 let temp = elements
                     .into_iter()
-                    .map(|element| (element.clone(), element.intersect(&ray)))
-                    .collect::<Vec<(Element, Option<PointInfo>)>>();
+                    .map(|element| (element, element.intersect(&ray)))
+                    .collect::<Vec<(&Element, Option<PointInfo>)>>();
                 let mut temp2 = Vec::new();
                 // Keep only the rays that hit
                 for i in temp {
