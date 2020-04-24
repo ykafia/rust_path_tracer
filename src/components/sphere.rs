@@ -12,9 +12,9 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(x: f32, y: f32, z: f32, radius : f32, albedo : f32) -> Sphere {
+    pub fn textured(x: f32, y: f32, z: f32,texture_path : &str, radius : f32, albedo : f32) -> Sphere {
        
-        let texture = image::io::Reader::open("textures/rust_logo.png").unwrap().decode().unwrap();
+        let texture = image::io::Reader::open(texture_path).unwrap().decode().unwrap();
         
         Sphere {
             center: Vector3::new(x, y, z),
@@ -27,7 +27,19 @@ impl Sphere {
             }
         }
     }
-    
+
+    pub fn new(x: f32, y: f32, z: f32, color : Colors,radius : f32, albedo : f32) -> Sphere {        
+        Sphere {
+            center: Vector3::new(x, y, z),
+            radius: radius,
+            material : Material {
+                albedo : albedo,
+                emissive : Emissive::Color(
+                    color.value()
+                )
+            }
+        }
+    }
 }
 
 impl Intersectable for Sphere {
@@ -83,8 +95,6 @@ impl Intersectable for Sphere {
 
         let phi  = spherical_coord.z.atan2(spherical_coord.x);
         let theta = (spherical_coord.y / self.radius).acos();
-        // println!("Sphere UVs : [{} : {}]",phi,theta);
-        // println!("v : {}",(PI + theta)/(PI*2.0));
         TexCoord {
             x : (PI + phi)/(PI*2.0),
             y : (PI + theta)/(PI*2.0)

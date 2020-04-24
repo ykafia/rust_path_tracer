@@ -5,7 +5,8 @@ use super::*;
 pub struct Plane {
     pub position: Vector3<f32>,
     pub normal: Vector3<f32>,
-    pub material : Material
+    pub material : Material,
+    pub repeat_texture : Option<f32>
 }
 
 impl Plane {
@@ -16,7 +17,26 @@ impl Plane {
             material : Material {
                 emissive : Emissive::Color(Colors::GREY.value()),
                 albedo : 1.0
-            }
+            },
+            repeat_texture : None
+        }
+    }
+    pub fn textured() -> Plane {
+        let texture = 
+            image::io::Reader::open("textures/checker.png")
+            .unwrap()
+            .decode()
+            .unwrap();
+        Plane {
+            position: Vector3::new(0f32, -0.5f32, 0f32),
+            normal: Vector3::new(0f32, -1f32, 0f32),
+            material : Material {
+                albedo : 1.0,
+                emissive : Emissive::Texture(
+                    texture
+                )              
+            },
+            repeat_texture : Some(10.0)
         }
     }
 }
@@ -64,18 +84,22 @@ impl Intersectable for Plane {
         self.material.albedo
     }
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
-        let mut x_axis : Vector3<f32> = self.normal.cross(&Vector3::z());
+        let mut x_axis : Vector3<f32> = self.normal.cross(&Vector3::z()).normalize();
         
         if vector_length(x_axis) == 0.0 {
             x_axis = self.normal.cross(&Vector3::y());
         }
         
-        let y_axis : Vector3<f32> = self.normal.cross(&x_axis);
+        let y_axis : Vector3<f32> = self.normal.cross(&x_axis).normalize();
 
         let plane_point = intersect - self.position;
+        // println!("plane u : {}\nplane v : {}",plane_point.dot(&x_axis),plane_point.dot(&y_axis));
+        let repeat = self.repeat_texture.unwrap_or(10.0);
+        let u = plane_point.dot(&x_axis).rem_euclid(repeat);
+        let v = plane_point.dot(&y_axis).rem_euclid(repeat);
         TexCoord {
-            x : plane_point.dot(&x_axis),
-            y : plane_point.dot(&y_axis)
+            x : u/repeat,
+            y : v/repeat
         }
     }
 }

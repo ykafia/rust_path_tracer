@@ -44,8 +44,6 @@ impl Emissive {
         match self {
             Emissive::Color(c) => c.clone(),
             Emissive::Texture(t) => {
-                // println!("Texture : [{}-{}]",(coord.x*t.height as f32) as usize,(coord.y*t.width as f32) as usize);
-                // println!("{:?}",t);
                 let color = Color::from(t.get_pixel(
                     (coord.x*t.width() as f32) as u32,
                     (coord.y*t.height() as f32) as u32

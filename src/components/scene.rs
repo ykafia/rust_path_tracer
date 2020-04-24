@@ -37,8 +37,6 @@ impl Scene {
         result
     }
     pub fn compute_shadowed(&self, element : &Element,light : &Light, pf : PointInfo, elements : &[Element]) -> Color{
-        
-        // println!("Compute shadow function : {}",pf.intersection);
         let intensity = 
             pf
             .normal
@@ -89,13 +87,12 @@ impl Scene {
                     .map(|(e, op)| {RayInfo(e, op)})
                     .collect::<Vec<RayInfo>>();
                 intersects.sort();
-                // println!("first intersects {:?}",intersects[0].1);
+               
                 match intersects.first() {
                     Some(v) => {
                         // for each element
-                        let closest_element = v.0.clone();
-                        let closest_point = v.1.clone();
-                        // println!("{:?}",closest_element.get_color(closest_point.intersection));
+                        let closest_element = v.0;
+                        let closest_point = v.1;
                         lights
                             .iter()
                             .map(|light| {
@@ -112,15 +109,15 @@ impl Scene {
                             .to_rgba()
                     }
                     None => {
-                        // let mut intensity = 1.0;
-                        // for l in lights {
-                        //     intensity = intensity
-                        //         * match l {
-                        //             Light::DirectionalLight(v) => v.intensity,
-                        //             _ => 1.0,
-                        //         };
-                        // }
-                        Colors::SKYBLUE.value().to_rgba()
+                        let mut intensity = 1.0;
+                        for l in lights {
+                            intensity = intensity
+                                * match l {
+                                    Light::DirectionalLight(v) => v.intensity,
+                                    _ => 1.0,
+                                };
+                        }
+                        (Colors::SKYBLUE.value()*intensity).to_rgba()
                         
                     }
                 }
