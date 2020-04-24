@@ -10,6 +10,7 @@ pub struct Scene {
     pub height: u32,
     pub fov: f32,
     pub camera: Camera,
+    pub max_recursion : usize
 }
 
 impl Scene {
@@ -24,6 +25,7 @@ impl Scene {
                 // direction
                 target.normalize(),
             ),
+            max_recursion : 2,
         }
     }
     pub fn is_shadowed(&self, ray: &Ray, elements: &[Element]) -> bool {

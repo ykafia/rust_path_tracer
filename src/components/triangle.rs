@@ -1,4 +1,5 @@
 use super::*;
+use std::f32::consts::PI;
 
 #[derive(Clone)]
 pub struct Triangle {
@@ -9,12 +10,16 @@ pub struct Triangle {
 
 impl Triangle {
     pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle {
+        let texture = image::io::Reader::open("textures/checker.png").unwrap().decode().unwrap();
         Triangle {
             coordinates: coord,
             normal : Triangle::calculate_normal(coord),
             material : Material {
                 albedo : albedo,
-                emissive : Emissive::Color(col)
+                emissive : Surface::Texture(
+                    texture
+                ),
+                reflectivity : None
             }
         }
     }
@@ -29,7 +34,8 @@ impl Triangle {
             normal : Triangle::calculate_normal(coord),
             material : Material {
                 albedo : 1.0,
-                emissive : Emissive::Color(Colors::BLUE.value())
+                emissive : Surface::Color(Colors::BLUE.value()),
+                reflectivity : 1.0
             }
         }
     }
@@ -88,9 +94,11 @@ impl Intersectable for Triangle {
         self.material.albedo
     }
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
-        // let triangle_area = compute_triangle_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);
+        
         
         // This is the old way, calculating the triangle areas and all
+
+        // let triangle_area = compute_triangle_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);
         // let u = 
         //     //CAP area
         //     compute_triangle_area(self.coordinates[2], self.coordinates[0], intersect)/triangle_area;
@@ -101,7 +109,7 @@ impl Intersectable for Triangle {
         // let w = 
         //     //BCP area
         //     compute_triangle_area(self.coordinates[1], self.coordinates[2], intersect)/triangle_area;
-        // 
+        
         // But we're going to use a simpler math : 
         // Tri Area / Tri Area = Parallelogram Area * 0.5 / Parallelogram Area * 0.5
         //                     = Parallelogram Area / Parallelogram Area
@@ -115,12 +123,14 @@ impl Intersectable for Triangle {
         //ABP
         let v = parallelogram_area(self.coordinates[0],self.coordinates[1],intersect)/tri_p;
 
-        //BCP
-        let w = 1.0-u-v;
-        
+        // BCP
+        // let w = 1.0-u-v;
+        // if v>3.0 {
+        //     println!("[{} ; {} ; {}]",u,v,w);
+        // }
         TexCoord {
-            x : u,
-            y : v
+            x : (u/PI) % 1.0,
+            y : (v/PI) %1.0
         }
         
 

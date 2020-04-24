@@ -4,7 +4,8 @@ use std::sync::Arc;
 #[derive(Clone)]
 pub struct Material {
     pub albedo : f32,
-    pub emissive : Emissive
+    pub emissive : Surface,
+    pub reflectivity : Option<f32>
 }
 
 #[derive(Clone,Debug)]
@@ -33,17 +34,17 @@ pub struct TexCoord {
 }
 
 #[derive(Clone)]
-pub enum Emissive {
+pub enum Surface {
     Color(Color),
     Texture(DynamicImage)
 }
 
 
-impl Emissive {
+impl Surface {
     pub fn color(&self, coord : TexCoord) -> Color {
         match self {
-            Emissive::Color(c) => c.clone(),
-            Emissive::Texture(t) => {
+            Surface::Color(c) => c.clone(),
+            Surface::Texture(t) => {
                 let color = Color::from(t.get_pixel(
                     (coord.x*t.width() as f32) as u32,
                     (coord.y*t.height() as f32) as u32

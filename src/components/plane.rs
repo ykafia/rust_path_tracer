@@ -15,7 +15,7 @@ impl Plane {
             position: Vector3::new(0f32, -0.5f32, 0f32),
             normal: Vector3::new(0f32, -1f32, 0f32),
             material : Material {
-                emissive : Emissive::Color(Colors::GREY.value()),
+                emissive : Surface::Color(Colors::GREY.value()),
                 albedo : 1.0
             },
             repeat_texture : None
@@ -32,9 +32,10 @@ impl Plane {
             normal: Vector3::new(0f32, -1f32, 0f32),
             material : Material {
                 albedo : 1.0,
-                emissive : Emissive::Texture(
+                emissive : Surface::Texture(
                     texture
-                )              
+                ),
+                reflectivity : Some(0.4)             
             },
             repeat_texture : Some(10.0)
         }

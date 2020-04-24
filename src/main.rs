@@ -23,35 +23,38 @@ fn render_scene() {
         // Element::Sphere(Sphere::new(1f32, 1f32, -1f32,8.0,  0.6)),
         Element::Plane(Plane::textured()),
         // Element::Triangle(Triangle::new_defined()),
-        // Element::Triangle(Triangle::new(
-        //     [Vector3::new(0.0, 0.0, 0.0),
-        //     Vector3::new(0.0, 1.0, 0.0),
-        //     Vector3::new(1.0, 0.0, 1.0)],
-        //     Colors::BLUE.value(),
-        //     0.2
-        // ))
+        Element::Triangle(Triangle::new(
+            [
+                Vector3::new(-6.0, 1.0, -8.0),
+                Vector3::new(-6.0, 8.0, -8.0),
+                Vector3::new(6.0, 1.0, -8.0),
+                
+            ],
+            Colors::BLUE.value(),
+            0.2
+        ))
     ];
     let lights = [
-        Light::PointLight(PointLight {
-            color: Colors::WHITE.value(),
-            intensity: 4.0,
-            position : Vector3::new(0.0, 2.0, 1.0),
-        }),
-        Light::PointLight(PointLight {
-            color: Colors::RED.value(),
-            intensity: 3.0,
-            position : Vector3::new(0.0, 2.0, -1.0),
-        }),
+        // Light::PointLight(PointLight {
+        //     color: Colors::WHITE.value(),
+        //     intensity: 4.0,
+        //     position : Vector3::new(0.0, 2.0, 1.0),
+        // }),
+        // Light::PointLight(PointLight {
+        //     color: Colors::RED.value(),
+        //     intensity: 3.0,
+        //     position : Vector3::new(0.0, 2.0, -1.0),
+        // }),
         Light::DirectionalLight(DirectionalLight {
             color: Colors::WHITE.value(),
-            intensity: 0.2,
+            intensity: 0.4,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
     ];
     let mut image = 
         DynamicImage::new_rgb8(600, 400);
 
-    let camera_pos = Vector3::new(2.0,2.0,8.0);
+    let camera_pos = Vector3::new(10.0,5.0,10.0);
     let scene = Scene::new(
         camera_pos, 
         elements[0].get_position() - camera_pos

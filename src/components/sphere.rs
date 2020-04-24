@@ -21,9 +21,10 @@ impl Sphere {
             radius: radius,
             material : Material {
                 albedo : albedo,
-                emissive : Emissive::Texture(
+                emissive : Surface::Texture(
                     texture
-                )
+                ),
+                reflectivity : None
             }
         }
     }
@@ -34,9 +35,10 @@ impl Sphere {
             radius: radius,
             material : Material {
                 albedo : albedo,
-                emissive : Emissive::Color(
+                emissive : Surface::Color(
                     color.value()
-                )
+                ),
+                reflectivity : None
             }
         }
     }
