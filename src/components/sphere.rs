@@ -1,28 +1,36 @@
 use super::na::{Vector3};
 use super::*;
+use std::sync::Arc;
+use std::f32::consts::PI;
+use std::time::*;
 
-#[derive(Copy,Clone,Debug)]
-pub struct Sphere<'a> {
+#[derive(Clone)]
+pub struct Sphere {
     pub center: Vector3<f32>,
     pub radius: f32,
-    pub material : Material<'a>
+    pub material : Material
 }
 
-impl<'a> Sphere<'a> {
-    pub fn new(x: f32, y: f32, z: f32, radius : f32, color : Colors,albedo : f32) -> Sphere<'a> {
+impl Sphere {
+    pub fn new(x: f32, y: f32, z: f32, radius : f32, albedo : f32) -> Sphere {
+       
+        let texture = image::io::Reader::open("textures/rust_logo.png").unwrap().decode().unwrap();
+        
         Sphere {
             center: Vector3::new(x, y, z),
             radius: radius,
             material : Material {
                 albedo : albedo,
-                emissive : Emissive::Color(color.value())
+                emissive : Emissive::Texture(
+                    texture
+                )
             }
         }
     }
     
 }
 
-impl<'a> Intersectable for Sphere<'a> {
+impl Intersectable for Sphere {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let l = self.center - ray.origin;
         let adj = l.dot(&ray.direction);
@@ -32,6 +40,7 @@ impl<'a> Intersectable for Sphere<'a> {
     }
     fn intersect(&self, ray: &Ray) -> Option<PointInfo> {
         let l = self.center - ray.origin;
+        
         let adj = l.dot(&ray.direction);
         let d2 = l.dot(&l) - (adj * adj);
         let radius2 = self.radius * self.radius;
@@ -42,6 +51,7 @@ impl<'a> Intersectable for Sphere<'a> {
         let t0 = adj - thc;
         let t1 = adj + thc;
 
+        
         if t0 < 0.0 && t1 < 0.0 {
             return None;
         }
@@ -59,7 +69,7 @@ impl<'a> Intersectable for Sphere<'a> {
     }
     fn get_color(&self, intersection : Vector3<f32> ) -> Color {
         self.material.emissive.color(
-            &self.get_texcoord(intersection)
+            self.get_texcoord(intersection)
         )
     }
     fn get_position(&self) -> Vector3<f32> {
@@ -70,11 +80,14 @@ impl<'a> Intersectable for Sphere<'a> {
     }
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
         let spherical_coord = intersect - self.center;
+
         let phi  = spherical_coord.z.atan2(spherical_coord.x);
         let theta = (spherical_coord.y / self.radius).acos();
+        // println!("Sphere UVs : [{} : {}]",phi,theta);
+        // println!("v : {}",(PI + theta)/(PI*2.0));
         TexCoord {
-            x : ((1.0+phi) / std::f32::consts::PI)/2.0,
-            y : theta
+            x : (PI + phi)/(PI*2.0),
+            y : (PI + theta)/(PI*2.0)
         }
     }
 }

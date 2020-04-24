@@ -12,17 +12,15 @@ use na::{Vector3};
 use nalgebra as na;
 use std::time::*;
 
+
 fn main() {
-    let first = Instant::now();
     render_scene();
-    let last = Instant::now();
-    println!("{} fps", 1.0/(last-first).as_secs_f64());
 }
 fn render_scene() {
     let elements = [
-        Element::Sphere(Sphere::new(0f32, 0f32, -3f32, 3.0, Colors::BLUE, 0.5)),
-        Element::Sphere(Sphere::new(0f32, 1f32, -4f32,5.0, Colors::RED, 0.7)),
-        Element::Sphere(Sphere::new(1f32, 1f32, -1f32,8.0, Colors::GREEN, 0.6)),
+        Element::Sphere(Sphere::new(0f32, 2f32, 0f32, 3.0,  0.5)),
+        // Element::Sphere(Sphere::new(0f32, 1f32, -4f32,5.0, 0.7)),
+        // Element::Sphere(Sphere::new(1f32, 1f32, -1f32,8.0,  0.6)),
         Element::Plane(Plane::new()),
         // Element::Triangle(Triangle::new_defined()),
         // Element::Triangle(Triangle::new(
@@ -46,19 +44,22 @@ fn render_scene() {
         }),
         Light::DirectionalLight(DirectionalLight {
             color: Colors::WHITE.value(),
-            intensity: 0.3,
+            intensity: 0.4,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
     ];
     let mut image = 
         DynamicImage::new_rgb8(600, 400);
 
-    let camera_pos = Vector3::new(-0.0,3.0,-1.0);
+    let camera_pos = Vector3::new(2.0,2.0,8.0);
     let scene = Scene::new(
         camera_pos, 
         elements[0].get_position() - camera_pos
     );
+    let first = Instant::now();
     image = scene.rayon_rays(&mut image, &elements, &lights);
+    let last = Instant::now();
+    println!("{} fps", 1.0/(last-first).as_secs_f64());
     image.save("./renders/rayon_image.png").expect("file saved")
 }
 

@@ -31,7 +31,7 @@ impl Ray {
         let aspect_ratio = (scene.width as f32) / (scene.height as f32);
         let dir_x = ((((x as f32 + 0.5) / scene.width as f32) * 2.0 - 1.0) * aspect_ratio) * fov_adjustment;
         let dir_y = 1.0 - ((y as f32 + 0.5) / scene.height as f32) * 2.0;
-        // println!("{}",(scene.camera.rotation * Vector3::new(dir_x, dir_y, 1f32).normalize()).normalize());
+        // println!("{}",scene.camera.rotation);
         
         Ray {
             origin: scene.camera.position,

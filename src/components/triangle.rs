@@ -1,14 +1,14 @@
 use super::*;
 
-#[derive(Copy, Clone,Debug)]
-pub struct Triangle<'a> {
+#[derive(Clone)]
+pub struct Triangle {
     pub coordinates: [Vector3<f32>; 3],
     pub normal : Vector3<f32>,
-    pub material : Material<'a>
+    pub material : Material
 }
 
-impl<'a> Triangle<'a> {
-    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle<'a> {
+impl Triangle {
+    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle {
         Triangle {
             coordinates: coord,
             normal : Triangle::calculate_normal(coord),
@@ -18,7 +18,7 @@ impl<'a> Triangle<'a> {
             }
         }
     }
-    pub fn new_defined() -> Triangle<'a> {
+    pub fn new_defined() -> Triangle {
         let coord = [
             Vector3::new(0.0, 2.0, 0.0),
             Vector3::new(0.0, 5.0, 0.0),
@@ -40,7 +40,7 @@ impl<'a> Triangle<'a> {
     }
 }
 
-impl<'a> Intersectable for Triangle<'a> {
+impl Intersectable for Triangle {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
@@ -81,7 +81,7 @@ impl<'a> Intersectable for Triangle<'a> {
     }
     fn get_color(&self, intersection : Vector3<f32>) -> Color {
         self.material.emissive.color(
-            &self.get_texcoord(intersection)
+            self.get_texcoord(intersection)
         )
     }
     fn get_albedo(&self) -> f32 {

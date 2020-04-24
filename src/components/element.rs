@@ -1,11 +1,11 @@
 use super::*;
-#[derive(Copy,Clone,Debug)]
-pub enum Element<'a> {
-    Sphere(Sphere<'a>),
-    Plane(Plane<'a>),
-    Triangle(Triangle<'a>)
+#[derive(Clone)]
+pub enum Element {
+    Sphere(Sphere),
+    Plane(Plane),
+    Triangle(Triangle)
 }
-impl<'a> Intersectable for Element<'a> {
+impl Intersectable for Element {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         match *self {
             Element::Sphere(ref s) => s.simple_intersect(ray),

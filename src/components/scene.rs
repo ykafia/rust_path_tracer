@@ -1,6 +1,8 @@
 use super::na::Vector3;
 use super::*;
 use std::f32::consts::PI;
+use rayon::iter::IntoParallelRefIterator;
+use rayon::iter::ParallelIterator;
 
 #[derive(Copy, Clone)]
 pub struct Scene {
@@ -35,6 +37,8 @@ impl Scene {
         result
     }
     pub fn compute_shadowed(&self, element : &Element,light : &Light, pf : PointInfo, elements : &[Element]) -> Color{
+        
+        // println!("Compute shadow function : {}",pf.intersection);
         let intensity = 
             pf
             .normal
@@ -63,12 +67,14 @@ impl Scene {
         let new_buffer = 
             image
             .pixels()
-            .map(|(x, y, _)| {
+            .collect::<Vec<(u32,u32,_)>>()
+            .par_iter()
+            .map(|(x, y, _)| {        
                 // check all intersect and compare the distances
-                let ray = Ray::from_camera(x, y, self);
+                let ray = Ray::from_camera(*x, *y, self);
                 let temp = elements
                     .into_iter()
-                    .map(|element| (*element, element.intersect(&ray)))
+                    .map(|element| (element.clone(), element.intersect(&ray)))
                     .collect::<Vec<(Element, Option<PointInfo>)>>();
                 let mut temp2 = Vec::new();
                 // Keep only the rays that hit
@@ -80,14 +86,16 @@ impl Scene {
                 }
                 let mut intersects = temp2
                     .into_iter()
-                    .map(|(e, op)| RayInfo(e, op))
+                    .map(|(e, op)| {RayInfo(e, op)})
                     .collect::<Vec<RayInfo>>();
                 intersects.sort();
+                // println!("first intersects {:?}",intersects[0].1);
                 match intersects.first() {
                     Some(v) => {
                         // for each element
-                        let closest_element = v.0;
-                        let closest_point = v.1;
+                        let closest_element = v.0.clone();
+                        let closest_point = v.1.clone();
+                        // println!("{:?}",closest_element.get_color(closest_point.intersection));
                         lights
                             .iter()
                             .map(|light| {
@@ -104,17 +112,19 @@ impl Scene {
                             .to_rgba()
                     }
                     None => {
-                        let mut intensity = 1.0;
-                        for l in lights {
-                            intensity = intensity
-                                * match l {
-                                    Light::DirectionalLight(v) => v.intensity,
-                                    _ => 1.0,
-                                };
-                        }
-                        (Colors::SKYBLUE.value() * intensity).to_rgba()
+                        // let mut intensity = 1.0;
+                        // for l in lights {
+                        //     intensity = intensity
+                        //         * match l {
+                        //             Light::DirectionalLight(v) => v.intensity,
+                        //             _ => 1.0,
+                        //         };
+                        // }
+                        Colors::SKYBLUE.value().to_rgba()
+                        
                     }
                 }
+                
             })
             .collect::<Vec<Rgba<u8>>>();
 

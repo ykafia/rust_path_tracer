@@ -14,6 +14,7 @@ pub struct Camera {
 
 impl Camera {
     pub fn new(position : Vector3<f32>, direction : Vector3<f32>) -> Camera {
+        assert_ne!(Vector3::new(0.0,-1.0,0.0),direction.normalize());
         Camera {
             position: position,
             rotation: Rotation3::face_towards(&direction,&Vector3::y()),
