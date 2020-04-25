@@ -35,7 +35,7 @@ impl Triangle {
             material : Material {
                 albedo : 1.0,
                 emissive : Surface::Color(Colors::BLUE.value()),
-                reflectivity : 1.0
+                reflectivity : Some(1.0)
             }
         }
     }
@@ -134,6 +134,9 @@ impl Intersectable for Triangle {
         }
         
 
+    }
+    fn get_reflectivity(&self) -> Option<f32> {
+        self.material.reflectivity
     }
 }
 

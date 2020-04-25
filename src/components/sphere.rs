@@ -102,4 +102,7 @@ impl Intersectable for Sphere {
             y : (PI + theta)/(PI*2.0)
         }
     }
+    fn get_reflectivity(&self) -> Option<f32> {
+        self.material.reflectivity
+    }
 }

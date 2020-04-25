@@ -16,7 +16,8 @@ impl Plane {
             normal: Vector3::new(0f32, -1f32, 0f32),
             material : Material {
                 emissive : Surface::Color(Colors::GREY.value()),
-                albedo : 1.0
+                albedo : 1.0,
+                reflectivity : Some(0.5)
             },
             repeat_texture : None
         }
@@ -35,7 +36,7 @@ impl Plane {
                 emissive : Surface::Texture(
                     texture
                 ),
-                reflectivity : Some(0.4)             
+                reflectivity : Some(0.1)             
             },
             repeat_texture : Some(10.0)
         }
@@ -102,6 +103,9 @@ impl Intersectable for Plane {
             x : u/repeat,
             y : v/repeat
         }
+    }
+    fn get_reflectivity(&self) -> Option<f32> {
+        self.material.reflectivity
     }
 }
 

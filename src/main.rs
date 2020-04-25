@@ -18,21 +18,21 @@ fn main() {
 }
 fn render_scene() {
     let elements = [
-        Element::Sphere(Sphere::textured(0f32, 2f32, 0f32,"textures/rust_logo.png", 3.0,  0.5)),
-        // Element::Sphere(Sphere::new(0f32, 1f32, -4f32,5.0, 0.7)),
-        // Element::Sphere(Sphere::new(1f32, 1f32, -1f32,8.0,  0.6)),
-        Element::Plane(Plane::textured()),
+        Element::Sphere(Sphere::new(-6f32, 5f32, 0f32,Colors::CYAN, 3.0,  1.0)),
+        Element::Sphere(Sphere::new(0f32, 8f32, -4f32,Colors::MAGENTA,5.0, 0.7)),
+        // Element::Sphere(Sphere::new(12f32, 1f32, -12f32,Colors::GREEN,8.0,  0.6)),
+        Element::Plane(Plane::new()),
         // Element::Triangle(Triangle::new_defined()),
-        Element::Triangle(Triangle::new(
-            [
-                Vector3::new(-6.0, 1.0, -8.0),
-                Vector3::new(-6.0, 8.0, -8.0),
-                Vector3::new(6.0, 1.0, -8.0),
+        // Element::Triangle(Triangle::new(
+        //     [
+        //         Vector3::new(-6.0, 1.0, -8.0),
+        //         Vector3::new(-6.0, 8.0, -8.0),
+        //         Vector3::new(6.0, 1.0, -8.0),
                 
-            ],
-            Colors::BLUE.value(),
-            0.2
-        ))
+        //     ],
+        //     Colors::BLUE.value(),
+        //     0.2
+        // ))
     ];
     let lights = [
         // Light::PointLight(PointLight {
@@ -47,7 +47,7 @@ fn render_scene() {
         // }),
         Light::DirectionalLight(DirectionalLight {
             color: Colors::WHITE.value(),
-            intensity: 0.4,
+            intensity: 1.0,
             direction: Vector3::new(0.0, -1.0, -1.0),
         }),
     ];

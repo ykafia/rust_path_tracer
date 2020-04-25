@@ -48,4 +48,12 @@ impl Intersectable for Element {
             Element::Triangle(ref t) => t.get_texcoord(intersect)
         }
     }
+    fn get_reflectivity(&self) -> Option<f32> {
+        match *self {
+            Element::Sphere(ref s) => s.get_reflectivity(),
+            Element::Plane(ref p) => p.get_reflectivity(),
+            Element::Triangle(ref t) => t.get_reflectivity()
+        }
+    
+    }
 }

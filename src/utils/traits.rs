@@ -7,4 +7,5 @@ pub trait Intersectable {
     fn get_position(&self) -> Vector3<f32>;
     fn get_albedo(&self) -> f32;
     fn get_texcoord(&self,intersect : Vector3<f32>) -> TexCoord;
+    fn get_reflectivity(&self) -> Option<f32>;
 }
