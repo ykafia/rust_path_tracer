@@ -2,9 +2,12 @@
 mod material;
 mod components;
 mod utils;
+mod window;
+
 use components::*;
 use material::*;
 use utils::*;
+use window::*;
 
 use image::gif::Encoder;
 use image::*;
@@ -14,8 +17,10 @@ use std::time::*;
 
 
 fn main() {
-    render_scene();
+    window()
 }
+
+
 fn render_scene() {
     let elements = [
         Element::Sphere(Sphere::new(-6f32, 5f32, 0f32,Colors::CYAN, 3.0,  1.0)),

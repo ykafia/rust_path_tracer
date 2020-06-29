@@ -2,7 +2,7 @@ use super::*;
 pub enum Element {
     Sphere(Sphere),
     Plane(Plane),
-    Triangle(Triangle)
+    Triangle(Tri)
 }
 impl Intersectable for Element {
     fn simple_intersect(&self, ray: &Ray) -> bool {

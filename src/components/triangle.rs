@@ -2,18 +2,18 @@ use super::*;
 use std::f32::consts::PI;
 
 #[derive(Clone)]
-pub struct Triangle {
+pub struct Tri {
     pub coordinates: [Vector3<f32>; 3],
     pub normal : Vector3<f32>,
     pub material : Material
 }
 
-impl Triangle {
-    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Triangle {
+impl Tri {
+    pub fn new(coord: [Vector3<f32>; 3], col: Color, albedo: f32) -> Tri {
         let texture = image::io::Reader::open("textures/checker.png").unwrap().decode().unwrap();
-        Triangle {
+        Tri {
             coordinates: coord,
-            normal : Triangle::calculate_normal(coord),
+            normal : Tri::calculate_normal(coord),
             material : Material {
                 albedo : albedo,
                 emissive : Surface::Texture(
@@ -23,15 +23,15 @@ impl Triangle {
             }
         }
     }
-    pub fn new_defined() -> Triangle {
+    pub fn new_defined() -> Tri {
         let coord = [
             Vector3::new(0.0, 2.0, 0.0),
             Vector3::new(0.0, 5.0, 0.0),
             Vector3::new(5.0, 5.0, 5.0),
         ];
-        Triangle {
+        Tri {
             coordinates: coord,
-            normal : Triangle::calculate_normal(coord),
+            normal : Tri::calculate_normal(coord),
             material : Material {
                 albedo : 1.0,
                 emissive : Surface::Color(Colors::BLUE.value()),
@@ -46,7 +46,7 @@ impl Triangle {
     }
 }
 
-impl Intersectable for Triangle {
+impl Intersectable for Tri {
     fn simple_intersect(&self, ray: &Ray) -> bool {
         let normal = &self.normal;
         let denom = normal.dot(&ray.direction);
@@ -68,7 +68,7 @@ impl Intersectable for Triangle {
             let d = self.normal.dot(&self.coordinates[0]);
             let t = -(self.normal.dot(&ray.origin) + d) / self.normal.dot(&ray.direction);
             let intersect = ray.origin + t * ray.direction;
-            if check_inside_triangle(intersect,self.coordinates) {
+            if check_inside_Tri(intersect,self.coordinates) {
                 Some(
                     PointInfo {
                         distance : t,
@@ -96,19 +96,19 @@ impl Intersectable for Triangle {
     fn get_texcoord(&self, intersect : Vector3<f32>) -> TexCoord {
         
         
-        // This is the old way, calculating the triangle areas and all
+        // This is the old way, calculating the Tri areas and all
 
-        // let triangle_area = compute_triangle_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);
+        // let Tri_area = compute_Tri_area(self.coordinates[1], self.coordinates[2], self.coordinates[0]);
         // let u = 
         //     //CAP area
-        //     compute_triangle_area(self.coordinates[2], self.coordinates[0], intersect)/triangle_area;
+        //     compute_Tri_area(self.coordinates[2], self.coordinates[0], intersect)/Tri_area;
         // let v = 
         //     // ABP area
-        //     compute_triangle_area(self.coordinates[0], self.coordinates[1], intersect)/triangle_area;
+        //     compute_Tri_area(self.coordinates[0], self.coordinates[1], intersect)/Tri_area;
 
         // let w = 
         //     //BCP area
-        //     compute_triangle_area(self.coordinates[1], self.coordinates[2], intersect)/triangle_area;
+        //     compute_Tri_area(self.coordinates[1], self.coordinates[2], intersect)/Tri_area;
         
         // But we're going to use a simpler math : 
         // Tri Area / Tri Area = Parallelogram Area * 0.5 / Parallelogram Area * 0.5
@@ -140,19 +140,19 @@ impl Intersectable for Triangle {
     }
 }
 
-fn compute_triangle_area( a : Vector3<f32>, b : Vector3<f32>, intersection : Vector3<f32>) -> f32 {
+fn compute_Tri_area( a : Vector3<f32>, b : Vector3<f32>, intersection : Vector3<f32>) -> f32 {
     let edge_1 = vector_length(b-intersection);
     let edge_2 = vector_length(a-intersection);
     edge_1*edge_2*0.5
 }
 
 
-fn check_inside_triangle(
+fn check_inside_Tri(
     point: Vector3<f32>, 
-    triangle: [Vector3<f32>; 3]) -> bool {
-    same_side(point,triangle[0],triangle[1],triangle[2]) &&
-        same_side(point,triangle[1],triangle[0],triangle[2]) &&
-        same_side(point,triangle[2],triangle[0],triangle[1])     
+    Tri: [Vector3<f32>; 3]) -> bool {
+    same_side(point,Tri[0],Tri[1],Tri[2]) &&
+        same_side(point,Tri[1],Tri[0],Tri[2]) &&
+        same_side(point,Tri[2],Tri[0],Tri[1])     
 }
 fn same_side(p1 : Vector3<f32>,p2 : Vector3<f32>,a : Vector3<f32>,b : Vector3<f32>) -> bool {
     let cp1 = (b-a).cross(&(p1-a));

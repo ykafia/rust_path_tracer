@@ -45,7 +45,7 @@ impl Light {
             Light::PointLight(ref p) => {
                 let diff = intersection - p.position;
                 let (x, y, z) = (diff.x, diff.y, diff.z);
-                (1.0 / (x * x + y * y + z * z).sqrt()) * p.intensity
+                (p.intensity / (x * x + y * y + z * z).sqrt())
             }
         }
     }
