@@ -37,10 +37,7 @@ pub fn window() {
     .expect("Unable to open Window");
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        u32_buffer =
-            render_scene(H,W)
-                .into_par_iter()
-                .collect();
+        u32_buffer = render_scene(H,W);
         println!("{}",u32_buffer.len());
         window
             .update_with_buffer(&u32_buffer, W, H)

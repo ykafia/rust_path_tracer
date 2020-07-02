@@ -13,13 +13,13 @@ pub struct Camera {
 
 
 impl Camera {
-    pub fn new(position : Vector3<f32>, direction : Vector3<f32>) -> Camera {
+    pub fn new(position : Vector3<f32>, direction : Vector3<f32>, width : u32, height : u32) -> Camera {
         assert_ne!(Vector3::new(0.0,-1.0,0.0),direction.normalize());
         Camera {
             position: position,
             rotation: Rotation3::face_towards(&direction,&Vector3::y()),
-            width: 600,
-            height: 400,
+            width: width as usize,
+            height: height as usize,
             fov: 90f32,
         }
     }

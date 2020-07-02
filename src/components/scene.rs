@@ -14,16 +14,18 @@ pub struct Scene {
 }
 
 impl Scene {
-    pub fn new(camera_pos: Vector3<f32>, target: Vector3<f32>) -> Scene {
+    pub fn new(camera_pos: Vector3<f32>, target: Vector3<f32>, width : u32, height : u32) -> Scene {
         Scene {
-            width: 600,
-            height: 400,
+            width: width,
+            height: height,
             fov: 90.0,
             camera: Camera::new(
                 // position
                 camera_pos,
                 // direction
                 target.normalize(),
+                width,
+                height
             ),
             max_recursion : 2,
         }
