@@ -3,7 +3,6 @@ use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 
 pub fn render_scene(height : usize, width : usize) -> Vec<u32>{
-    println!("will create a frame with dimension : {}x{} = {}", width,height,width*height);
     let elements = [
         Element::Sphere(Sphere::new(-6f32, 5f32, 0f32,Colors::CYAN, 3.0,  1.0)),
         Element::Sphere(Sphere::new(0f32, 8f32, -4f32,Colors::MAGENTA,5.0, 0.7)),
@@ -48,10 +47,8 @@ pub fn render_scene(height : usize, width : usize) -> Vec<u32>{
         width as u32,
         height as u32
     );
-    let first = Instant::now();
     image = scene.rayon_rays(&mut image, &elements, &lights);
-    let last = Instant::now();
-    println!("{} fps", 1.0/(last-first).as_secs_f64());
+    
     // image.save("./renders/rayon_image.png").expect("file saved")
     image
         .to_rgb()

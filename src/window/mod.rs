@@ -23,7 +23,7 @@ pub fn window() {
         .chunks(3)
         .map(|v| ((v[0] as u32) << 16) | ((v[1] as u32) << 8) | v[2] as u32)
         .collect();
-    println!("First size {}", u32_buffer.len());
+    
     let mut window = Window::new(
         "Noise Test - Press ESC to exit",
         W,
@@ -37,11 +37,13 @@ pub fn window() {
     .expect("Unable to open Window");
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        u32_buffer = render_scene(H,W);
-        println!("{}",u32_buffer.len());
+        let first = Instant::now(); 
+        u32_buffer = render_scene(H,W);      
         window
             .update_with_buffer(&u32_buffer, W, H)
             .unwrap();
+        let last = Instant::now();
+        println!("{:.1} fps", 1.0/(last-first).as_secs_f64());
     }
 
 }
