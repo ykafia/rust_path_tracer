@@ -1,15 +1,17 @@
 
 mod material;
-mod components;
+mod graphics;
 mod utils;
 mod window;
 mod render;
+mod components;
 
-use components::*;
+use graphics::*;
 use material::*;
 use utils::*;
 use window::*;
 use render::*;
+use components::*;
 
 use image::gif::Encoder;
 use image::*;

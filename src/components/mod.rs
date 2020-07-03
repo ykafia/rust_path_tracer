@@ -1,25 +1,32 @@
 use super::*;
+use ecs::*;
 
-pub use self::camera::*;
-pub use self::plane::*;
-pub use self::ray::*;
-#[allow(dead_code)]
-pub use self::scene::*;
-pub use self::sphere::*;
-pub use self::utils::*;
-pub use self::element::*;
-pub use self::lights::*;
-pub use self::triangle::*;
-pub use self::material::*;
+mod ecs;
 
 
+use legion::prelude::*;
 
+#[derive(Clone,Copy,Debug,PartialEq)]
+pub struct TransformComponent{
+    position : Vector3<f32>,
+    rotation : Vector3<f32>
+}
 
-mod camera;
-mod plane;
-mod ray;
-mod scene;
-mod sphere;
-mod element;
-mod lights;
-mod triangle;
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct VelocityComponent {
+    velocity : Vector3<f32>
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Model(usize);
+
+#[derive(Clone, Copy, Debug)]
+pub struct LightComponent(Light);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Static;
+
+pub fn create_universe() -> Universe {
+    let mut universe = Universe::new();
+    universe
+} 

@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct DirectionalLight {
     pub direction: Vector3<f32>,
     pub color: Color,
@@ -14,13 +14,13 @@ impl DirectionalLight {
 
 
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct PointLight {
     pub position: Vector3<f32>,
     pub color: Color,
     pub intensity: f32,
 }
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Light {
     DirectionalLight(DirectionalLight),
     PointLight(PointLight),
