@@ -4,13 +4,15 @@ use std::f32::consts::PI;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 
-#[derive(Copy, Clone)]
 pub struct Scene {
     pub width: u32,
     pub height: u32,
     pub fov: f32,
     pub camera: Camera,
-    pub max_recursion : usize
+    pub max_recursion : usize,
+    pub elements : Vec<Element>,
+    pub lights : Vec<Light>, 
+    pub image : DynamicImage
 }
 
 impl Scene {
@@ -28,6 +30,9 @@ impl Scene {
                 height
             ),
             max_recursion : 2,
+            elements : Vec::new(),
+            lights : Vec::new(),
+            image : DynamicImage::new_rgba8(0,0)
         }
     }
 
@@ -36,21 +41,18 @@ impl Scene {
         ray : &Ray,
         closest_element : &Element,
         closest_point : PointInfo,
-        elements : &[Element], 
         color : Color, 
-        lights : &[Light],
         recursion : usize
     ) -> Color {
         
         let computed_light_color = 
-            lights
+            self.lights
             .iter()
             .map(|light| {
                 self.compute_shadowed(
                     closest_element,
                     light,
-                    closest_point,
-                    elements
+                    closest_point
                 )
             })
             .collect::<Vec<Color>>()
@@ -65,8 +67,9 @@ impl Scene {
                     origin : closest_point.intersection + 1e-4 * closest_point.normal,
                     direction : incident - (2.0 * incident.dot(&closest_point.normal) * closest_point.normal), 
                 };
-                let temp = elements
-                    .into_iter()
+                let temp = 
+                    &self.elements
+                    .iter()
                     .map(|element| (element, element.intersect(&new_ray)))
                     .collect::<Vec<(&Element, Option<PointInfo>)>>();
                 let mut temp2 = Vec::new();
@@ -83,7 +86,7 @@ impl Scene {
                     .collect::<Vec<RayInfo>>();
                 intersects.sort();
                 match intersects.first() {
-                    Some(ri) => new_color = new_color + self.compute_color(&new_ray, ri.0, ri.1, elements, new_color.clone(), lights, recursion+1) * r,
+                    Some(ri) => new_color = new_color + self.compute_color(&new_ray, ri.0, ri.1, new_color.clone(), recursion+1) * r,
                     _ =>(),
                 }
                 
@@ -117,9 +120,9 @@ impl Scene {
 
         
     }
-    pub fn is_shadowed(&self, ray: &Ray, elements: &[Element]) -> bool {
+    pub fn is_shadowed(&self, ray: &Ray) -> bool {
         let mut result = false;
-        for element in elements {
+        for element in self.elements.iter() {
             match element.intersect(ray) {
                 Some(_) => result = true,
                 _ => (),
@@ -127,7 +130,7 @@ impl Scene {
         }
         result
     }
-    pub fn compute_shadowed(&self, element : &Element,light : &Light, pf : PointInfo, elements : &[Element]) -> Color{
+    pub fn compute_shadowed(&self, element : &Element,light : &Light, pf : PointInfo) -> Color{
         let intensity = 
             pf
             .normal
@@ -140,7 +143,6 @@ impl Scene {
                 origin: pf.intersection + 1e-4 * pf.normal,
                 direction: -light.get_direction(&element).normalize(),
             },
-            elements,
         ) {
             true => element.get_color(pf.intersection) * light.get_color() * 0.0 * reflected,
             false => element.get_color(pf.intersection) * light.get_color() * intensity * reflected
@@ -150,21 +152,19 @@ impl Scene {
     
     
     pub fn rayon_rays(
-        &self,
-        image: &mut DynamicImage,
-        elements: &[Element],
-        lights: &[Light],
-    ) -> DynamicImage {
-        let new_buffer = 
-            image
+        &mut self,
+    ) -> &DynamicImage {
+        let new_buffer =     
+            self.image
             .pixels()
             .collect::<Vec<(u32,u32,_)>>()
             .par_iter()
             .map(|(x, y, _)| {        
                 // check all intersect and compare the distances
                 let ray = Ray::from_camera(*x, *y, self);
-                let temp = elements
-                    .into_iter()
+                let temp = 
+                    &self.elements
+                    .iter()
                     .map(|element| (element, element.intersect(&ray)))
                     .collect::<Vec<(&Element, Option<PointInfo>)>>();
                 let mut temp2 = Vec::new();
@@ -190,15 +190,13 @@ impl Scene {
                             &ray, 
                             closest_element,
                             closest_point,
-                            elements, 
-                            Colors::BLACK.value(), 
-                            lights,
+                            Colors::BLACK.value(),
                             0
                         ).to_rgba()
                     }
                     None => {
                         let mut intensity = 1.0;
-                        for l in lights {
+                        for l in self.lights.iter() {
                             intensity = intensity
                                 * match l {
                                     Light::DirectionalLight(v) => v.intensity,
@@ -213,14 +211,12 @@ impl Scene {
             })
             .collect::<Vec<Rgba<u8>>>();
 
-        let mut result =
-            DynamicImage::new_rgba8(self.camera.width as u32, self.camera.height as u32);
         for y in 0..self.camera.height {
             for x in 0..self.camera.width {
-                result.put_pixel(x as u32, y as u32, new_buffer[y * self.camera.width + x]);
+                &self.image.put_pixel(x as u32, y as u32, new_buffer[y * self.camera.width + x]);
             }
         }
-        result
+        &self.image
     }
 }
 

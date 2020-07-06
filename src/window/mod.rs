@@ -8,7 +8,7 @@ use rayon::iter::Chunks;
 const W: usize = 640;
 const H: usize = 480;
 
-pub fn window() {
+pub fn window(scene : &mut Scene) {
 
     
     // Allocate the output buffer.
@@ -35,15 +35,44 @@ pub fn window() {
         },
     )
     .expect("Unable to open Window");
-
+    let mut elapsed = 0f64;
     while window.is_open() && !window.is_key_down(Key::Escape) {
         let first = Instant::now(); 
-        u32_buffer = render_scene(H,W);      
+        if window.is_key_down(Key::Left){
+            scene.camera.position.z += 5f32*elapsed as f32;
+        }
+        if window.is_key_down(Key::Right){
+            scene.camera.position.z -= 5f32*elapsed as f32;
+        }
+        if window.is_key_down(Key::Up){
+            scene.camera.position.x += 5f32*elapsed as f32;
+        }
+        if window.is_key_down(Key::Down){
+            scene.camera.position.x -= 5f32*elapsed as f32;
+        }
+        if window.is_key_down(Key::Space){
+            scene.camera.position.y += 5f32*elapsed as f32;
+        }
+        if window.is_key_down(Key::C){
+            scene.camera.position.y -= 5f32*elapsed as f32;
+        }
+
+        scene.camera.change_rotation(-scene.camera.position);
+        
+        u32_buffer = 
+            scene
+            .rayon_rays()
+            .to_rgb()
+            .pixels()
+            .map(|p| p.to_rgba().0)
+            .map(|v| ((v[0] as u32) << 16) | ((v[1] as u32) << 8) | v[2] as u32)
+            .collect();      
         window
-            .update_with_buffer(&u32_buffer, W, H)
+            .update_with_buffer(&u32_buffer, scene.camera.width, scene.camera.height)
             .unwrap();
         let last = Instant::now();
-        println!("{:.1} fps", 1.0/(last-first).as_secs_f64());
+        elapsed = (last-first).as_secs_f64();
+        println!("{:.1} fps", 1.0/elapsed);
     }
 
 }
