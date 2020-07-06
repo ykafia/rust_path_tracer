@@ -63,7 +63,7 @@ impl Scene {
             (Some(r),true) =>{
                 // println!("Reflection again");
                 let incident = closest_point.intersection - 1e-4 * closest_point.normal - ray.origin;
-                println!("######################\n{}\n{}",(2.0 * incident.dot(&closest_point.normal) * closest_point.normal), incident);
+                // println!("######################\n{}\n{}",(2.0 * incident.dot(&closest_point.normal) * closest_point.normal), incident);
                 let new_ray = Ray{
                     origin : closest_point.intersection - 1e-4 * closest_point.normal,
                     direction : incident - (2.0 * incident.dot(&closest_point.normal) * closest_point.normal), 
@@ -76,7 +76,7 @@ impl Scene {
                     .map(|(e,i)| (e,i.unwrap()))
                     .map(|(e, op)| {RayInfo(e, op)})
                     .collect::<Vec<RayInfo>>();
-                match intersects.iter().max() {
+                match intersects.iter().min() {
                     Some(ri) => new_color = new_color + self.compute_color(&new_ray, ri.0, ri.1, new_color.clone(), recursion+1) * r,
                     _ =>(),
                 }
@@ -164,7 +164,7 @@ impl Scene {
 
                 // intersects.sort();
                
-                match intersects.iter().max() {
+                match intersects.iter().min() {
                     Some(v) => {
                         // for each element
                         let closest_element = v.0;
