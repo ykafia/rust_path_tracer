@@ -9,3 +9,12 @@ pub trait Intersectable {
     fn get_texcoord(&self,intersect : Vector3<f32>) -> TexCoord;
     fn get_reflectivity(&self) -> Option<f32>;
 }
+
+pub trait ECSIntersectable {
+    fn intersect_ecs(&self, ray: &Ray, transform : &TransformComponent) -> Option<PointInfo>;
+    fn simple_intersect_ecs(&self, ray:&Ray, transform : &TransformComponent) -> bool;
+    fn get_color_ecs(&self, intersection : Vector3<f32>, transform : &TransformComponent) -> Color;
+    fn get_albedo_ecs(&self) -> f32;
+    fn get_texcoord_ecs(&self,intersect : Vector3<f32>, transform : &TransformComponent) -> TexCoord;
+    fn get_reflectivity_ecs(&self) -> Option<f32>;
+}

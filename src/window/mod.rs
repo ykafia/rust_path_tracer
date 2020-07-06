@@ -5,14 +5,14 @@ use rayon::iter::{IntoParallelRefIterator,IntoParallelIterator,ParallelIterator,
 use rayon::iter::Chunks;
 
 
-const W: usize = 640;
-const H: usize = 480;
 
-pub fn window() {
 
+pub fn run(scene : Scene) {
+    let (W,H) = (scene.camera.width,scene.camera.height);
     
     // Allocate the output buffer.
     let mut buf = vec![115u8; 3*W*H];
+    let mut image = DynamicImage::new_rgba8(W as u32, H as u32);
     // Read the next frame. Currently this function should only called once.
     // The default options
     // convert buffer to u32
@@ -25,7 +25,7 @@ pub fn window() {
         .collect();
     
     let mut window = Window::new(
-        "Noise Test - Press ESC to exit",
+        "Thracer - Press ESC to exit",
         W,
         H,
         WindowOptions {
@@ -38,7 +38,13 @@ pub fn window() {
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         let first = Instant::now(); 
-        u32_buffer = render_scene(H,W);      
+        u32_buffer = scene
+                        .ecs_rays(&mut image)
+                        .to_rgb()
+                        .pixels()
+                        .map(|p| p.to_rgba().0)
+                        .map(|v| ((v[0] as u32) << 16) | ((v[1] as u32) << 8) | v[2] as u32)
+                        .collect();      
         window
             .update_with_buffer(&u32_buffer, W, H)
             .unwrap();

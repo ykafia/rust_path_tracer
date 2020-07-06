@@ -33,6 +33,12 @@ impl Light {
             Light::PointLight(ref p) => element.get_position() - p.position,
         }
     }
+    pub fn get_direction_ecs(&self, element: &TransformComponent, transform : &TransformComponent) -> Vector3<f32> {
+        match *self {
+            Light::DirectionalLight(_) => transform.rotation,
+            Light::PointLight(_) => element.position - transform.position,
+        }
+    }
     pub fn get_color(&self) -> Color {
         match *self {
             Light::DirectionalLight(ref d) => d.color,

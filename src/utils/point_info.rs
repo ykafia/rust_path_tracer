@@ -27,6 +27,19 @@ impl PartialOrd<PointInfo> for PointInfo {
     }
 }
 
+pub struct ECSRayInfo<'a>{
+    pub e : ( &'a RenderableComponent, &'a TransformComponent),
+    pub pi : PointInfo
+}
+
+impl<'a> ECSRayInfo<'a> {
+    pub fn new(e : ( &'a RenderableComponent, &'a TransformComponent), pi : PointInfo) -> ECSRayInfo {
+        ECSRayInfo {
+            e : e,
+            pi : pi
+        }
+    }
+}
 
 pub struct RayInfo<'a>(pub &'a Element,pub PointInfo);
 
@@ -65,3 +78,38 @@ impl<'a> Ord for RayInfo<'a> {
         }
     }
 }
+
+impl<'a> PartialEq<ECSRayInfo<'a>> for ECSRayInfo<'a> {
+    fn eq(&self, other: &ECSRayInfo) -> bool { 
+        self.pi == other.pi
+    }
+}
+impl<'a> PartialOrd<ECSRayInfo<'a>> for ECSRayInfo<'a> {
+    fn partial_cmp(&self, other: &ECSRayInfo) -> Option<std::cmp::Ordering> {
+        if self.pi > other.pi {
+            Some(std::cmp::Ordering::Greater)
+        }
+        else if self.pi < other.pi{
+            Some(std::cmp::Ordering::Less)
+        }
+        else {
+            Some(std::cmp::Ordering::Equal)
+        }
+    }
+}
+impl<'a> Eq for ECSRayInfo<'a> {}
+
+impl<'a> Ord for ECSRayInfo<'a> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering { 
+        if self.pi > other.pi {
+            std::cmp::Ordering::Greater
+        }
+        else if self.pi < other.pi{
+            std::cmp::Ordering::Less
+        }
+        else {
+            std::cmp::Ordering::Equal
+        }
+    }
+}
+
