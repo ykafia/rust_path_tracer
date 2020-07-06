@@ -68,7 +68,7 @@ impl Scene {
                     origin : closest_point.intersection - 1e-4 * closest_point.normal,
                     direction : incident - (2.0 * incident.dot(&closest_point.normal) * closest_point.normal), 
                 };
-                let mut intersects = 
+                let intersects = 
                     &self.elements
                     .iter()
                     .map(|element| (element, element.intersect(&new_ray)))
@@ -153,7 +153,7 @@ impl Scene {
             .map(|(x, y, _)| {        
                 // check all intersect and compare the distances
                 let ray = Ray::from_camera(*x, *y, self);
-                let mut intersects = 
+                let intersects = 
                     &self.elements
                     .iter()
                     .map(|element| (element, element.intersect(&ray)))
