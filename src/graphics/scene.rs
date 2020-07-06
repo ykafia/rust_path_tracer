@@ -62,30 +62,21 @@ impl Scene {
         match (closest_element.get_reflectivity(),recursion<self.max_recursion) {
             (Some(r),true) =>{
                 // println!("Reflection again");
-                let incident = closest_point.intersection - ray.origin;
+                let incident = closest_point.intersection - 1e-4 * closest_point.normal - ray.origin;
+                println!("######################\n{}\n{}",(2.0 * incident.dot(&closest_point.normal) * closest_point.normal), incident);
                 let new_ray = Ray{
-                    origin : closest_point.intersection + 1e-4 * closest_point.normal,
+                    origin : closest_point.intersection - 1e-4 * closest_point.normal,
                     direction : incident - (2.0 * incident.dot(&closest_point.normal) * closest_point.normal), 
                 };
-                let temp = 
+                let mut intersects = 
                     &self.elements
                     .iter()
                     .map(|element| (element, element.intersect(&new_ray)))
-                    .collect::<Vec<(&Element, Option<PointInfo>)>>();
-                let mut temp2 = Vec::new();
-                // Keep only the rays that hit
-                for i in temp {
-                    match i.1 {
-                        Some(v) => temp2.push((i.0, v)),
-                        None => (),
-                    }
-                }
-                let mut intersects = temp2
-                    .into_iter()
+                    .filter(|(_,i)| i.is_some())
+                    .map(|(e,i)| (e,i.unwrap()))
                     .map(|(e, op)| {RayInfo(e, op)})
                     .collect::<Vec<RayInfo>>();
-                intersects.sort();
-                match intersects.first() {
+                match intersects.iter().max() {
                     Some(ri) => new_color = new_color + self.compute_color(&new_ray, ri.0, ri.1, new_color.clone(), recursion+1) * r,
                     _ =>(),
                 }
@@ -140,7 +131,7 @@ impl Scene {
         let reflected = element.get_albedo() / PI;
         match self.is_shadowed(
             &Ray {
-                origin: pf.intersection + 1e-4 * pf.normal,
+                origin: pf.intersection - 1e-4 * pf.normal,
                 direction: -light.get_direction(&element).normalize(),
             },
         ) {
@@ -162,26 +153,18 @@ impl Scene {
             .map(|(x, y, _)| {        
                 // check all intersect and compare the distances
                 let ray = Ray::from_camera(*x, *y, self);
-                let temp = 
+                let mut intersects = 
                     &self.elements
                     .iter()
                     .map(|element| (element, element.intersect(&ray)))
-                    .collect::<Vec<(&Element, Option<PointInfo>)>>();
-                let mut temp2 = Vec::new();
-                // Keep only the rays that hit
-                for i in temp {
-                    match i.1 {
-                        Some(v) => temp2.push((i.0, v)),
-                        None => (),
-                    }
-                }
-                let mut intersects = temp2
-                    .into_iter()
+                    .filter(|(_,i)| i.is_some())
+                    .map(|(e,i)| (e,i.unwrap()))
                     .map(|(e, op)| {RayInfo(e, op)})
                     .collect::<Vec<RayInfo>>();
-                intersects.sort();
+
+                // intersects.sort();
                
-                match intersects.first() {
+                match intersects.iter().max() {
                     Some(v) => {
                         // for each element
                         let closest_element = v.0;
